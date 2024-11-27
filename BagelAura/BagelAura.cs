@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Threading;
 using AuraServiceLib;
 
 namespace BagelAura
 {
-    internal class Program
+    internal class BagelAura
     {
         // Create SDK instance
         static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
