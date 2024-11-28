@@ -87,12 +87,14 @@ namespace BagelAura
                 InstanceName = "_Total"
             };
 
+            var calculator = new SimpleMovingAverage(k: 20);
+
             int k = 1;
             while (true)
             {
-                int cpuLoad = (int)(cpu.NextValue() * 100);
+                int cpuLoad = calculator.Update((int)(cpu.NextValue() * 100));
 
-                if (k == 1 || k == 600)
+                if (k == 1 || k == 5000)
                 {
                     ObtainControl();
                     k = 1;
