@@ -78,8 +78,24 @@ namespace BagelAura
             return BitConverter.ToUInt32(newBytes, 0);
         }
 
+        // Sets the process priority to Idle
+        static void SetProcessPriority(Process process)
+        {
+            process.PriorityClass = ProcessPriorityClass.Idle;
+        }
+
+        // cleanup on exit
+        private static void OnExit(object sender, System.EventArgs e)
+        {
+            sdk.ReleaseControl(0);
+        }
+
         static void Main(string[] args)
         {
+            Process process = Process.GetCurrentProcess();
+            SetProcessPriority(process);
+            process.Exited += new EventHandler(OnExit);
+
             var cpu = new PerformanceCounter
             {
                 CategoryName = "Processor Information",
@@ -92,7 +108,7 @@ namespace BagelAura
             int k = 1;
             while (true)
             {
-                int cpuLoad = calculator.Update((int)(cpu.NextValue() * 100));
+                int cpuLoad = calculator.Update((int)(cpu.NextValue() * 100) - 500);
 
                 if (k == 1 || k == 5000)
                 {
@@ -133,7 +149,6 @@ namespace BagelAura
                 System.Threading.Thread.Sleep(60);
                 k++;
             }
-            sdk.ReleaseControl(0);
         }
     }
 }
