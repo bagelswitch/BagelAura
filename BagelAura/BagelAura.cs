@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using AuraServiceLib;
@@ -61,6 +62,22 @@ namespace BagelAura
             }
         }
 
+        static uint AdjustColorIntensity(uint color, float intensity)
+        {
+            byte[] bytes = BitConverter.GetBytes(color);
+            //if (BitConverter.IsLittleEndian)
+            //    Array.Reverse(bytes);
+
+            byte[] newBytes = {
+                (byte) ((float) bytes[0] * intensity),
+                (byte) ((float) bytes[1] * intensity),
+                (byte) ((float) bytes[2] * intensity),
+                (byte) ((float) bytes[3] * intensity)
+            };
+
+            return BitConverter.ToUInt32(newBytes, 0);
+        }
+
         static void Main(string[] args)
         {
             var cpu = new PerformanceCounter
@@ -73,7 +90,7 @@ namespace BagelAura
             int k = 1;
             while (true)
             {
-                uint cpuLoad = (uint)(cpu.NextValue() * 100);
+                int cpuLoad = (int)(cpu.NextValue() * 100);
 
                 if (k == 1 || k == 600)
                 {
@@ -82,65 +99,36 @@ namespace BagelAura
                 }
 
                 // Set LEDs on mboard i/o panel
-                if (cpuLoad > 500)
-                {
-                    mBoardLights[0].Color = colors[0];
-                } else
-                {
-                    mBoardLights[0].Color = 0x00000000;
-                }
+                float intensity = (float) (cpuLoad) / (float) 2000;
+                if (intensity > 1.0) intensity = (float) 1.0;
+                if (intensity < 0.0) intensity = (float) 0.0;
+                mBoardLights[0].Color = AdjustColorIntensity(colors[0], intensity);
 
-                if (cpuLoad > 2500)
-                {
-                    mBoardLights[1].Color = colors[4];
-                }
-                else
-                {
-                    mBoardLights[1].Color = 0x00000000;
-                }
+                intensity = (float) (cpuLoad - 2000) / (float) 2000;
+                if (intensity > 1.0) intensity = (float) 1.0;
+                if (intensity < 0.0) intensity = (float) 0.0;
+                mBoardLights[1].Color = AdjustColorIntensity(colors[4], intensity);
 
-                if (cpuLoad > 4000)
-                {
-                    mBoardLights[2].Color = colors[7];
-                }
-                else
-                {
-                    mBoardLights[2].Color = 0x00000000;
-                }
+                intensity = (float) (cpuLoad - 4000) / (float) 2000;
+                if (intensity > 1.0) intensity = (float) 1.0;
+                if (intensity < 0.0) intensity = (float) 0.0;
+                mBoardLights[2].Color = AdjustColorIntensity(colors[7], intensity);
 
                 mBoard.Apply();
 
-                // Traverse all LEDs on stick one
-                int i = 1;
-                foreach (IAuraRgbLight light in stickOneLights)
+                // Traverse all LEDs on DRAM sticks one and two
+                for (int i = 0; i < 8; i++)
                 {
-                    if(cpuLoad > (i*500))
-                    {
-                        light.Color = colors[i-1];
-                    } else
-                    {
-                        light.Color = 0x00000000;
-                    }
-                    i++;
+                    intensity = (float) (cpuLoad - (i * 500)) / (float) 500;
+                    if (intensity > 1.0) intensity = (float) 1.0;
+                    if (intensity < 0.0) intensity = (float) 0.0;
+                    stickOneLights[i].Color = AdjustColorIntensity(colors[i], intensity);
+                    stickTwoLights[i].Color = AdjustColorIntensity(colors[i], intensity);
                 }
                 stickOne.Apply();
-
-                // Traverse all LEDs on stick two
-                int j = 1;
-                foreach (IAuraRgbLight light in stickTwoLights)
-                {
-                    if (cpuLoad > (j * 500))
-                    {
-                        light.Color = colors[j - 1];
-                    } else
-                    {
-                        light.Color = 0x00000000;
-                    }
-                    j++;
-                }
                 stickTwo.Apply();
 
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(60);
                 k++;
             }
             sdk.ReleaseControl(0);
