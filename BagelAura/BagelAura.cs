@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using AuraServiceLib;
+using Microsoft.Win32;
 
 namespace BagelAura
 {
     internal class BagelAura
     {
+        static Boolean active = true;
+
         // Create SDK instance
         static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
 
@@ -78,6 +81,19 @@ namespace BagelAura
             return BitConverter.ToUInt32(newBytes, 0);
         }
 
+        static uint ColorFromBytes(byte blue, byte green, byte red)
+        {
+            byte[] bytes = {
+                0x00,
+                blue,
+                green,
+                red
+            };
+            Array.Reverse(bytes);
+
+            return BitConverter.ToUInt32(bytes, 0);
+        }
+
         // Sets the process priority to Idle
         static void SetProcessPriority(Process process)
         {
@@ -90,11 +106,25 @@ namespace BagelAura
             sdk.ReleaseControl(0);
         }
 
+        static void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            if(e.Mode == PowerModes.Suspend)
+            {
+                active = false;
+                sdk.ReleaseControl(0);
+            } else if (e.Mode == PowerModes.Resume)
+            {
+                ObtainControl();
+                active = true;
+            }
+        }
+
         static void Main(string[] args)
         {
             Process process = Process.GetCurrentProcess();
             SetProcessPriority(process);
             process.Exited += new EventHandler(OnExit);
+            SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(OnPowerModeChanged);
 
             var cpu = new PerformanceCounter
             {
@@ -108,44 +138,60 @@ namespace BagelAura
             int k = 1;
             while (true)
             {
-                int cpuLoad = calculator.Update((int)(cpu.NextValue() * 100) - 500);
-
-                if (k == 1 || k == 5000)
+                if (active)
                 {
-                    ObtainControl();
-                    k = 1;
+                    int cpuLoad = calculator.Update((int)(cpu.NextValue() * 100) - 500);
+
+                    if (k == 1 || k == 5000)
+                    {
+                        ObtainControl();
+                        k = 1;
+                    }
+
+                    // Set LEDs on mboard i/o panel
+                    int blue = 0;
+                    int green = 0;
+                    int red = 0;
+                    if (cpuLoad > 3333)
+                    {
+                        float intensity = (float)(cpuLoad - 3333) / (float)1667;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        red = 255;
+                        green = 255 - (int) (255 * intensity);
+                    } else if (cpuLoad > 1667)
+                    {
+                        float intensity = (float)(cpuLoad - 1667) / (float)1667;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        red = (int)(255 * intensity);
+                        green = 255;
+                    } else
+                    {
+                        float intensity = (float)(cpuLoad) / (float)1667;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        red = 0;
+                        green = (int)(255 * intensity);
+                    }
+                    uint iocolor = ColorFromBytes((byte) blue, (byte) green, (byte) red);
+                    mBoardLights[0].Color = iocolor;
+                    mBoardLights[1].Color = iocolor;
+                    mBoardLights[2].Color = iocolor;
+                    mBoard.Apply();
+
+                    // Traverse all LEDs on DRAM sticks one and two
+                    for (int i = 0; i < 8; i++)
+                    {
+                        float intensity = (float)(cpuLoad - (i * 625)) / (float) 625;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        stickOneLights[i].Color = AdjustColorIntensity(colors[i], intensity);
+                        stickTwoLights[i].Color = AdjustColorIntensity(colors[i], intensity);
+                    }
+                    stickOne.Apply();
+                    stickTwo.Apply();
                 }
-
-                // Set LEDs on mboard i/o panel
-                float intensity = (float) (cpuLoad) / (float) 2000;
-                if (intensity > 1.0) intensity = (float) 1.0;
-                if (intensity < 0.0) intensity = (float) 0.0;
-                mBoardLights[0].Color = AdjustColorIntensity(colors[0], intensity);
-
-                intensity = (float) (cpuLoad - 2000) / (float) 2000;
-                if (intensity > 1.0) intensity = (float) 1.0;
-                if (intensity < 0.0) intensity = (float) 0.0;
-                mBoardLights[1].Color = AdjustColorIntensity(colors[4], intensity);
-
-                intensity = (float) (cpuLoad - 4000) / (float) 2000;
-                if (intensity > 1.0) intensity = (float) 1.0;
-                if (intensity < 0.0) intensity = (float) 0.0;
-                mBoardLights[2].Color = AdjustColorIntensity(colors[7], intensity);
-
-                mBoard.Apply();
-
-                // Traverse all LEDs on DRAM sticks one and two
-                for (int i = 0; i < 8; i++)
-                {
-                    intensity = (float) (cpuLoad - (i * 500)) / (float) 500;
-                    if (intensity > 1.0) intensity = (float) 1.0;
-                    if (intensity < 0.0) intensity = (float) 0.0;
-                    stickOneLights[i].Color = AdjustColorIntensity(colors[i], intensity);
-                    stickTwoLights[i].Color = AdjustColorIntensity(colors[i], intensity);
-                }
-                stickOne.Apply();
-                stickTwo.Apply();
-
                 System.Threading.Thread.Sleep(60);
                 k++;
             }
