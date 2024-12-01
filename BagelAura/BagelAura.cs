@@ -183,11 +183,15 @@ namespace BagelAura
                     // Traverse all LEDs on DRAM sticks one and two
                     for (int i = 0; i < 8; i++)
                     {
+                        stickOneLights[i].Color = iocolor;
+                        stickTwoLights[i].Color = iocolor;
+                        /*
                         float intensity = (float)(cpuLoad - (i * 625)) / (float) 625;
                         if (intensity > 1.0) intensity = (float)1.0;
                         if (intensity < 0.0) intensity = (float)0.0;
                         stickOneLights[i].Color = AdjustColorIntensity(colors[i], intensity);
                         stickTwoLights[i].Color = AdjustColorIntensity(colors[i], intensity);
+                        */
                     }
                     stickOne.Apply();
                     stickTwo.Apply();
