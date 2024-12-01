@@ -68,8 +68,6 @@ namespace BagelAura
         static uint AdjustColorIntensity(uint color, float intensity)
         {
             byte[] bytes = BitConverter.GetBytes(color);
-            //if (BitConverter.IsLittleEndian)
-            //    Array.Reverse(bytes);
 
             byte[] newBytes = {
                 (byte) ((float) bytes[0] * intensity),
@@ -89,7 +87,8 @@ namespace BagelAura
                 green,
                 red
             };
-            Array.Reverse(bytes);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
 
             return BitConverter.ToUInt32(bytes, 0);
         }
@@ -103,6 +102,7 @@ namespace BagelAura
         // cleanup on exit
         private static void OnExit(object sender, System.EventArgs e)
         {
+            active = false;
             sdk.ReleaseControl(0);
         }
 
