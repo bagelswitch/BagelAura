@@ -14,9 +14,6 @@ namespace BagelAura
         // Create SDK instance
         static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
 
-        // enumerate all devices
-        static IAuraSyncDeviceCollection devices = sdk.Enumerate(0);
-
         static IAuraSyncDevice stickOne = null;
         static IAuraSyncDevice stickTwo = null;
         static IAuraSyncDevice mBoard = null;
@@ -35,32 +32,38 @@ namespace BagelAura
                 0x00003FDF,
                 0x000000FF};
 
-        static void ObtainControl()
+        static void ObtainControl(Boolean reEnum = true)
         {
             // Aquire control
             sdk.ReleaseControl(0);
             sdk.SwitchMode();
 
-            // Traverse all devices
-            foreach (IAuraSyncDevice dev in devices)
+            if (reEnum)
             {
-                if (dev.Name.Equals("ENE_RGB_For_ASUS0"))
+                // enumerate all devices
+                IAuraSyncDeviceCollection devices = sdk.Enumerate(0);
+
+                // Traverse all devices
+                foreach (IAuraSyncDevice dev in devices)
                 {
-                    stickOne = dev;
-                    stickOneLights = stickOne.Lights.Cast<IAuraRgbLight>().ToList();
-                    stickOneLights.Reverse();
-                }
-                else if (dev.Name.Equals("ENE_RGB_For_ASUS1"))
-                {
-                    stickTwo = dev;
-                    stickTwoLights = stickTwo.Lights.Cast<IAuraRgbLight>().ToList();
-                    stickTwoLights.Reverse();
-                }
-                else if (dev.Name.Equals("Mainboard_Master"))
-                {
-                    mBoard = dev;
-                    mBoardLights = mBoard.Lights.Cast<IAuraRgbLight>().ToList();
-                    mBoardLights.Reverse();
+                    if (dev.Name.Equals("ENE_RGB_For_ASUS0"))
+                    {
+                        stickOne = dev;
+                        stickOneLights = stickOne.Lights.Cast<IAuraRgbLight>().ToList();
+                        stickOneLights.Reverse();
+                    }
+                    else if (dev.Name.Equals("ENE_RGB_For_ASUS1"))
+                    {
+                        stickTwo = dev;
+                        stickTwoLights = stickTwo.Lights.Cast<IAuraRgbLight>().ToList();
+                        stickTwoLights.Reverse();
+                    }
+                    else if (dev.Name.Equals("Mainboard_Master"))
+                    {
+                        mBoard = dev;
+                        mBoardLights = mBoard.Lights.Cast<IAuraRgbLight>().ToList();
+                        mBoardLights.Reverse();
+                    }
                 }
             }
         }
@@ -114,6 +117,7 @@ namespace BagelAura
                 sdk.ReleaseControl(0);
             } else if (e.Mode == PowerModes.Resume)
             {
+                active = false;
                 ObtainControl();
                 active = true;
             }
@@ -142,9 +146,12 @@ namespace BagelAura
                 {
                     int cpuLoad = calculator.Update((int)(cpu.NextValue() * 100) - 500);
 
-                    if (k == 1 || k == 5000)
+                    if (k == 1)
                     {
                         ObtainControl();
+                    } else if (k >= 5000)
+                    {
+                        ObtainControl(false);
                         k = 1;
                     }
 
@@ -185,13 +192,6 @@ namespace BagelAura
                     {
                         stickOneLights[i].Color = iocolor;
                         stickTwoLights[i].Color = iocolor;
-                        /*
-                        float intensity = (float)(cpuLoad - (i * 625)) / (float) 625;
-                        if (intensity > 1.0) intensity = (float)1.0;
-                        if (intensity < 0.0) intensity = (float)0.0;
-                        stickOneLights[i].Color = AdjustColorIntensity(colors[i], intensity);
-                        stickTwoLights[i].Color = AdjustColorIntensity(colors[i], intensity);
-                        */
                     }
                     stickOne.Apply();
                     stickTwo.Apply();
