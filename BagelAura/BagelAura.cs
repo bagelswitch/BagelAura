@@ -22,16 +22,6 @@ namespace BagelAura
         static List<IAuraRgbLight> stickTwoLights = null;
         static List<IAuraRgbLight> mBoardLights = null;
 
-        static uint[] colors = {
-                0x0000FF00,
-                0x0000DF3F,
-                0x0000BF5F,
-                0x00009F7F,
-                0x00007F9F,
-                0x00005FBF,
-                0x00003FDF,
-                0x000000FF};
-
         static void ObtainControl(Boolean reEnum = true)
         {
             // Aquire control
@@ -159,27 +149,47 @@ namespace BagelAura
                     int blue = 0;
                     int green = 0;
                     int red = 0;
-                    if (cpuLoad > 3333)
+                    if (cpuLoad > 6000)
                     {
-                        float intensity = (float)(cpuLoad - 3333) / (float)1667;
+                        float intensity = (float)(cpuLoad - 6000) / (float)1500;
                         if (intensity > 1.0) intensity = (float)1.0;
                         if (intensity < 0.0) intensity = (float)0.0;
+                        blue = 0;
                         red = 255;
-                        green = 255 - (int) (255 * intensity);
-                    } else if (cpuLoad > 1667)
+                        green = 255 - (int)(255 * intensity);
+                    } else if (cpuLoad > 4500)
                     {
-                        float intensity = (float)(cpuLoad - 1667) / (float)1667;
+                        float intensity = (float)(cpuLoad - 4500) / (float)1500;
                         if (intensity > 1.0) intensity = (float)1.0;
                         if (intensity < 0.0) intensity = (float)0.0;
+                        blue = 0;
                         red = (int)(255 * intensity);
                         green = 255;
-                    } else
+                    }
+                    else if (cpuLoad > 3000)
                     {
-                        float intensity = (float)(cpuLoad) / (float)1667;
+                        float intensity = (float)(cpuLoad - 3000) / (float)1500;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        red = 0;
+                        blue = 255 - (int)(255 * intensity);
+                        green = 255;
+                    } else if (cpuLoad > 1500)
+                    {
+                        float intensity = (float)(cpuLoad - 1500) / (float)1500;
                         if (intensity > 1.0) intensity = (float)1.0;
                         if (intensity < 0.0) intensity = (float)0.0;
                         red = 0;
                         green = (int)(255 * intensity);
+                        blue = 255;
+                    } else
+                    {
+                        float intensity = (float)(cpuLoad) / (float)1500;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        red = 0;
+                        green = 0;
+                        blue = (int)(255 * intensity);
                     }
                     uint iocolor = ColorFromBytes((byte) blue, (byte) green, (byte) red);
                     mBoardLights[0].Color = iocolor;
