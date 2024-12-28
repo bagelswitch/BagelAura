@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,27 +48,24 @@ namespace BagelAura
 
             using (var gfx = e.Graphics)
             {
-                //using (var graphPen = new Pen(this.currentcolor))
-                //{
-                    //graphPen.Width = graphLine;
-                    //graphPen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
-                    int i = 0;
-                    for (; i < graphPoints.Length - 1; i++)
-                    {
-                        graphPoints[i].X = segmentWidth * i;
-                        graphPoints[i].Y = graphPoints[i + 1].Y;
-                        graphColors[i] = graphColors[i+1];
-
-                        
-                        gfx.FillRectangle(new SolidBrush(graphColors[i]), new Rectangle(graphPoints[i].X, graphPoints[i].Y, segmentWidth, graphHeight - graphPoints[i].Y));
-                        //graphPen.Color = graphColors[i];
-                        //gfx.DrawLine(graphPen, graphPoints[i].X, graphPoints[i].Y, graphPoints[i + 1].X, graphPoints[i + 1].Y);
-
-                    }
+                int i = 0;
+                for (; i < graphPoints.Length - 1; i++)
+                {
                     graphPoints[i].X = segmentWidth * i;
-                    graphPoints[i].Y = graphHeight - (int)graphLine - currentload;
-                    graphColors[i] = this.currentcolor;
-                //}
+
+                    Point[] points = {  new Point(graphPoints[i].X, graphPoints[i].Y), 
+                                        new Point(graphPoints[i + 1].X, graphPoints[i + 1].Y), 
+                                        new Point(graphPoints[i + 1].X, graphHeight),
+                                        new Point(graphPoints[i].X, graphHeight) };
+
+                    gfx.FillPolygon(new SolidBrush(graphColors[i]), points, FillMode.Winding);
+
+                    graphPoints[i].Y = graphPoints[i + 1].Y;
+                    graphColors[i] = graphColors[i+1];
+                }
+                graphPoints[i].X = segmentWidth * i;
+                graphPoints[i].Y = graphHeight - (int)graphLine - currentload;
+                graphColors[i] = this.currentcolor;
             }
         }
     }
