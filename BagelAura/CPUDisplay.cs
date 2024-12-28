@@ -58,7 +58,10 @@ namespace BagelAura
                                         new Point(graphPoints[i + 1].X, graphHeight),
                                         new Point(graphPoints[i].X, graphHeight) };
 
-                    gfx.FillPolygon(new SolidBrush(graphColors[i]), points, FillMode.Winding);
+                    using (var brush = new SolidBrush(graphColors[i]))
+                    {
+                        gfx.FillPolygon(brush, points, FillMode.Winding);
+                    }
 
                     graphPoints[i].Y = graphPoints[i + 1].Y;
                     graphColors[i] = graphColors[i+1];
