@@ -117,12 +117,14 @@ namespace BagelAura
         {
             active = false;
             sdk.ReleaseControl(0);
+            Application.Exit();
         }
 
         static void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
             if(e.Mode == PowerModes.Suspend)
             {
+                cpud.Hide();
                 active = false;
                 sdk.ReleaseControl(0);
             } else if (e.Mode == PowerModes.Resume)
@@ -130,6 +132,7 @@ namespace BagelAura
                 active = false;
                 ObtainControl();
                 active = true;
+                cpud.Show();
             }
         }
 

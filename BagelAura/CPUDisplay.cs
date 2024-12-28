@@ -13,14 +13,14 @@ namespace BagelAura
     public partial class CPUDisplay : Form
     {
         private int graphWidth = 1100;
-        private int graphHeight = 150;
+        private int graphHeight = 140;
         private float graphLine = 15.0F;
 
         public Color currentcolor = Color.Black;
         public int currentload = 0;
 
-        public Point[] graphPoints = new Point[10];
-        public Color[] graphColors = new Color[10];
+        public Point[] graphPoints = new Point[20];
+        public Color[] graphColors = new Color[20];
 
         private int segmentWidth;
 
@@ -31,10 +31,10 @@ namespace BagelAura
             this.Bounds = new Rectangle(0, 0, graphWidth, graphHeight);
             this.TopMost = true;
             Point TopLeft = Screen.AllScreens[0].WorkingArea.Location;
-            TopLeft.Y = TopLeft.Y + 2400;
+            TopLeft.Y = TopLeft.Y + 2350;
             this.Location = TopLeft;
-            this.BackColor = Color.Black;
-            this.TransparencyKey = Color.Black;
+            this.BackColor = Color.MediumPurple;
+            this.TransparencyKey = Color.White;
             this.Visible = true;
 
             segmentWidth = graphWidth / graphPoints.Length;
