@@ -162,7 +162,8 @@ namespace BagelAura
         {
             if (active)
             {
-                int cpuLoad = calculator.Update((int)(cpu.NextValue() * 100) - 500);
+                int instCpuLoad = (int)(cpu.NextValue() * 100);
+                int cpuLoad = calculator.Update(instCpuLoad - 500);
 
                 if (k == 1)
                 {
@@ -237,9 +238,10 @@ namespace BagelAura
                 }
                 stickOne.Apply();
                 stickTwo.Apply();
-
+                
                 Color activecolor = Color.FromArgb(red, green, blue);
-                cpud.activecolor = activecolor;
+                cpud.currentload = instCpuLoad / 100;
+                cpud.currentcolor = activecolor;
                 cpud.Invalidate();
             }
             k++;

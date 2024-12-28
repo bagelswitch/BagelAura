@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{82A72879-49FB-494F-BC59-BE5AD0C56219}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>BagelAura</RootNamespace>
     <AssemblyName>BagelAura</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
