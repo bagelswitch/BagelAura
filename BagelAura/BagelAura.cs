@@ -35,7 +35,15 @@ namespace BagelAura
             InstanceName = "_Total"
         };
 
-        static SimpleMovingAverage calculator = new SimpleMovingAverage(k: 20);
+        static SimpleMovingAverage graphCalculator = new SimpleMovingAverage(k: 5);
+
+        static SimpleMovingAverage redCalculator = new SimpleMovingAverage(k: 20);
+        static SimpleMovingAverage blueCalculator = new SimpleMovingAverage(k: 20);
+        static SimpleMovingAverage greenCalculator = new SimpleMovingAverage(k: 20);
+
+        static SimpleMovingAverage redGraphCalculator = new SimpleMovingAverage(k: 5);
+        static SimpleMovingAverage blueGraphCalculator = new SimpleMovingAverage(k: 5);
+        static SimpleMovingAverage greenGraphCalculator = new SimpleMovingAverage(k: 5);
 
         // attempt to draw rectangles directly to screen
         static CPUDisplay cpud = new CPUDisplay();
@@ -165,8 +173,8 @@ namespace BagelAura
         {
             if (active)
             {
-                int instCpuLoad = (int)(cpu.NextValue() * 100);
-                int cpuLoad = calculator.Update(instCpuLoad - 500);
+                int instCpuLoad = (int)(cpu.NextValue() * 100) - 500;
+                int graphCpuLoad = graphCalculator.Update(instCpuLoad);
 
                 if (k == 1)
                 {
@@ -182,36 +190,36 @@ namespace BagelAura
                 int blue = 0;
                 int green = 0;
                 int red = 0;
-                if (cpuLoad > 6000)
+                if (instCpuLoad > 6000)
                 {
-                    float intensity = (float)(cpuLoad - 6000) / (float)1500;
+                    float intensity = (float)(instCpuLoad - 6000) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     blue = 0;
                     red = 255;
                     green = 255 - (int)(255 * intensity);
                 }
-                else if (cpuLoad > 4500)
+                else if (instCpuLoad > 4500)
                 {
-                    float intensity = (float)(cpuLoad - 4500) / (float)1500;
+                    float intensity = (float)(instCpuLoad - 4500) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     blue = 0;
                     red = (int)(255 * intensity);
                     green = 255;
                 }
-                else if (cpuLoad > 3000)
+                else if (instCpuLoad > 3000)
                 {
-                    float intensity = (float)(cpuLoad - 3000) / (float)1500;
+                    float intensity = (float)(instCpuLoad - 3000) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     red = 0;
                     blue = 255 - (int)(255 * intensity);
                     green = 255;
                 }
-                else if (cpuLoad > 1500)
+                else if (instCpuLoad > 1500)
                 {
-                    float intensity = (float)(cpuLoad - 1500) / (float)1500;
+                    float intensity = (float)(instCpuLoad - 1500) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     red = 0;
@@ -220,30 +228,31 @@ namespace BagelAura
                 }
                 else
                 {
-                    float intensity = (float)(cpuLoad) / (float)1500;
+                    float intensity = (float)(instCpuLoad) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     red = 0;
                     green = 0;
                     blue = (int)(255 * intensity);
                 }
-                uint iocolor = ColorFromBytes((byte)blue, (byte)green, (byte)red);
-                mBoardLights[0].Color = iocolor;
-                mBoardLights[1].Color = iocolor;
-                mBoardLights[2].Color = iocolor;
+                uint color = ColorFromBytes((byte) blueCalculator.Update(blue), (byte) greenCalculator.Update(green), (byte) redCalculator.Update(red));
+
+                mBoardLights[0].Color = color;
+                mBoardLights[1].Color = color;
+                mBoardLights[2].Color = color;
                 mBoard.Apply();
 
                 // Traverse all LEDs on DRAM sticks one and two
                 for (int i = 0; i < 8; i++)
                 {
-                    stickOneLights[i].Color = iocolor;
-                    stickTwoLights[i].Color = iocolor;
+                    stickOneLights[i].Color = color;
+                    stickTwoLights[i].Color = color;
                 }
                 stickOne.Apply();
                 stickTwo.Apply();
                 
-                Color activecolor = Color.FromArgb(red, green, blue);
-                cpud.currentload = cpuLoad / 100;
+                Color activecolor = Color.FromArgb((int) redGraphCalculator.Update(red), (int) greenGraphCalculator.Update(green), (int) blueGraphCalculator.Update(blue));
+                cpud.currentload = graphCpuLoad / 100;
                 cpud.currentcolor = activecolor;
                 cpud.Invalidate();
             }

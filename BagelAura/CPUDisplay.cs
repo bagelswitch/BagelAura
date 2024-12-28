@@ -67,7 +67,7 @@ namespace BagelAura
                     graphColors[i] = graphColors[i+1];
                 }
                 graphPoints[i].X = segmentWidth * i;
-                graphPoints[i].Y = graphHeight - (int)graphLine - currentload;
+                graphPoints[i].Y = graphHeight - (int)graphLine - (int)currentload;
                 graphColors[i] = this.currentcolor;
             }
         }
