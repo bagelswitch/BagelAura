@@ -243,7 +243,7 @@ namespace BagelAura
                 stickTwo.Apply();
                 
                 Color activecolor = Color.FromArgb(red, green, blue);
-                cpud.currentload = instCpuLoad / 100;
+                cpud.currentload = cpuLoad / 100;
                 cpud.currentcolor = activecolor;
                 cpud.Invalidate();
             }

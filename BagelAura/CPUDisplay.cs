@@ -19,8 +19,8 @@ namespace BagelAura
         public Color currentcolor = Color.Black;
         public int currentload = 0;
 
-        public Point[] graphPoints = new Point[20];
-        public Color[] graphColors = new Color[20];
+        public Point[] graphPoints = new Point[50];
+        public Color[] graphColors = new Color[50];
 
         private int segmentWidth;
 
@@ -45,22 +45,29 @@ namespace BagelAura
             if (currentload < 0) currentload = 0;
             if (currentload > 100) currentload = 100;
 
-            int i = 0;
-            for(; i < graphPoints.Length - 1;i++)
+            using (var gfx = e.Graphics)
             {
-                graphPoints[i].X = segmentWidth * i;
-                graphPoints[i].Y = graphPoints[i+1].Y;
-            }
-            graphPoints[i].X = segmentWidth * i;
-            graphPoints[i].Y = graphHeight - (int) graphLine - currentload;
+                //using (var graphPen = new Pen(this.currentcolor))
+                //{
+                    //graphPen.Width = graphLine;
+                    //graphPen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
+                    int i = 0;
+                    for (; i < graphPoints.Length - 1; i++)
+                    {
+                        graphPoints[i].X = segmentWidth * i;
+                        graphPoints[i].Y = graphPoints[i + 1].Y;
+                        graphColors[i] = graphColors[i+1];
 
-            using (var gfx = e.Graphics) {
-                using (var graphPen = new Pen(new SolidBrush(this.currentcolor)))
-                {
-                    graphPen.Width = graphLine;
-                    graphPen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
-                    gfx.DrawLines(graphPen, graphPoints);
-                }
+                        
+                        gfx.FillRectangle(new SolidBrush(graphColors[i]), new Rectangle(graphPoints[i].X, graphPoints[i].Y, segmentWidth, graphHeight - graphPoints[i].Y));
+                        //graphPen.Color = graphColors[i];
+                        //gfx.DrawLine(graphPen, graphPoints[i].X, graphPoints[i].Y, graphPoints[i + 1].X, graphPoints[i + 1].Y);
+
+                    }
+                    graphPoints[i].X = segmentWidth * i;
+                    graphPoints[i].Y = graphHeight - (int)graphLine - currentload;
+                    graphColors[i] = this.currentcolor;
+                //}
             }
         }
     }
