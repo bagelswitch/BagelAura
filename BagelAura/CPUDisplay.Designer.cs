@@ -43,13 +43,16 @@ namespace BagelAura
             this.ControlBox = false;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "CPUDisplay";
-            this.Opacity = 0.50D;
+            this.Opacity = 0.75D;
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "CPUDisplay";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.CPUDisplay_Paint);
             this.ResumeLayout(false);
+            this.BackColor = Color.FromArgb(255, 80, 68, 80);
+            this.TransparencyKey = Color.White;
+            this.Visible = true;
 
         }
 

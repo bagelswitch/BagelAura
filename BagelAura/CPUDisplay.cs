@@ -34,9 +34,6 @@ namespace BagelAura
             Point TopLeft = Screen.AllScreens[0].WorkingArea.Location;
             TopLeft.Y = TopLeft.Y + 2350;
             this.Location = TopLeft;
-            this.BackColor = Color.MediumPurple;
-            this.TransparencyKey = Color.White;
-            this.Visible = true;
 
             segmentWidth = graphWidth / graphPoints.Length;
         }
