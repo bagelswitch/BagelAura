@@ -121,17 +121,17 @@ namespace BagelAura
         {
             process.PriorityClass = ProcessPriorityClass.Idle;
 
-            enable_ecoqos();
+            enable_ecoqos(process);
         }
 
-        static void enable_ecoqos()
+        static void enable_ecoqos(Process process)
         {
             PROCESS_POWER_THROTTLING_STATE PowerThrottling = new PROCESS_POWER_THROTTLING_STATE();
             PowerThrottling.Version = PROCESS_POWER_THROTTLING_STATE.PROCESS_POWER_THROTTLING_CURRENT_VERSION;
             PowerThrottling.ControlMask = PROCESS_POWER_THROTTLING_MASK.PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
             PowerThrottling.StateMask = PROCESS_POWER_THROTTLING_MASK.PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
 
-            SetProcessInformation<PROCESS_POWER_THROTTLING_STATE>(GetCurrentProcess(), PROCESS_INFORMATION_CLASS.ProcessPowerThrottling, PowerThrottling);
+            SetProcessInformation<PROCESS_POWER_THROTTLING_STATE>(process, PROCESS_INFORMATION_CLASS.ProcessPowerThrottling, PowerThrottling);
         }
 
         // cleanup on exit
