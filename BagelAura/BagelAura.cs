@@ -17,6 +17,8 @@ namespace BagelAura
     {
         static Boolean active = true;
 
+        static String[] others = { "HYTE.Nexus.Service", "HYTE Nexus", "wallpaper32", "AsusCertService", "asus_framework" };
+
         // Create SDK instance
         static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
 
@@ -54,6 +56,10 @@ namespace BagelAura
 
         static void ObtainControl(Boolean reEnum = true)
         {
+            // force all background processes to Eco QoS
+            Process process = Process.GetCurrentProcess();
+            EnableEcoqos(process);
+
             // Aquire control
             sdk.ReleaseControl(0);
             sdk.SwitchMode();
@@ -116,22 +122,26 @@ namespace BagelAura
             return BitConverter.ToUInt32(bytes, 0);
         }
 
-        // Sets the process priority to Idle
-        static void SetProcessPriority(Process process)
-        {
-            process.PriorityClass = ProcessPriorityClass.Idle;
-
-            enable_ecoqos(process);
-        }
-
-        static void enable_ecoqos(Process process)
+        // Set Eco QoS on some background processes
+        static void EnableEcoqos(Process process)
         {
             PROCESS_POWER_THROTTLING_STATE PowerThrottling = new PROCESS_POWER_THROTTLING_STATE();
             PowerThrottling.Version = PROCESS_POWER_THROTTLING_STATE.PROCESS_POWER_THROTTLING_CURRENT_VERSION;
             PowerThrottling.ControlMask = PROCESS_POWER_THROTTLING_MASK.PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
             PowerThrottling.StateMask = PROCESS_POWER_THROTTLING_MASK.PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
 
+            process.PriorityClass = ProcessPriorityClass.Idle;
             SetProcessInformation<PROCESS_POWER_THROTTLING_STATE>(process, PROCESS_INFORMATION_CLASS.ProcessPowerThrottling, PowerThrottling);
+
+            foreach (var other in others)
+            {
+                Process[] otherProcs = Process.GetProcessesByName(other);
+                foreach (var otherProcess in otherProcs)
+                {
+                    otherProcess.PriorityClass = ProcessPriorityClass.Idle;
+                    SetProcessInformation<PROCESS_POWER_THROTTLING_STATE>(otherProcess, PROCESS_INFORMATION_CLASS.ProcessPowerThrottling, PowerThrottling);
+                }
+            }
         }
 
         // cleanup on exit
@@ -171,7 +181,6 @@ namespace BagelAura
         static void Main(string[] args)
         {
             Process process = Process.GetCurrentProcess();
-            SetProcessPriority(process);
             process.Exited += new EventHandler(OnExit);
             SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(OnPowerModeChanged);
 
