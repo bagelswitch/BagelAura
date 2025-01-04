@@ -38,12 +38,17 @@ namespace BagelAura
             //this.Bounds = new Rectangle(TopLeft.X, TopLeft.Y, graphWidth, graphHeight);
 
             segmentWidth = graphWidth / graphPoints.Length;
+
+            this.Visible = true;
+            this.CPUPct.Visible= true;
         }
 
         private void CPUDisplay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             if (currentload < 0) currentload = 0;
             if (currentload > 100) currentload = 100;
+
+            this.CPUPct.Text = currentload.ToString("00") + "%";
 
             using (var gfx = e.Graphics)
             {
