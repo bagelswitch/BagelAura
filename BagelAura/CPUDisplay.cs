@@ -7,21 +7,21 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using AltUI.Forms;
 
 namespace BagelAura
 {
-    public partial class CPUDisplay : Form
+    public partial class CPUDisplay : DarkForm
     {
-        private int graphWidth = 1100;
+        private int graphWidth = 713;
         private int graphHeight = 140;
         private float graphLine = 15.0F;
 
         public Color currentcolor = Color.Black;
         public int currentload = 0;
 
-        public Point[] graphPoints = new Point[50];
-        public Color[] graphColors = new Color[50];
+        public Point[] graphPoints = new Point[71];
+        public Color[] graphColors = new Color[71];
 
         private int segmentWidth;
 
@@ -29,16 +29,18 @@ namespace BagelAura
         {
             InitializeComponent();
 
-            this.Bounds = new Rectangle(0, 0, graphWidth, graphHeight);
+            this.Bounds = new Rectangle(10, 0, graphWidth, graphHeight);
             this.TopMost = true;
-            Point TopLeft = Screen.AllScreens[0].WorkingArea.Location;
+            Point TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
+            TopLeft.X = TopLeft.X + 10;
             TopLeft.Y = TopLeft.Y + 2350;
             this.Location = TopLeft;
+            //this.Bounds = new Rectangle(TopLeft.X, TopLeft.Y, graphWidth, graphHeight);
 
             segmentWidth = graphWidth / graphPoints.Length;
         }
 
-        private void CPUDisplay_Paint(object sender, PaintEventArgs e)
+        private void CPUDisplay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             if (currentload < 0) currentload = 0;
             if (currentload > 100) currentload = 100;

@@ -2,9 +2,11 @@
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
+using AltUI.Forms;
+
 namespace BagelAura
 {
-    partial class CPUDisplay
+    partial class CPUDisplay : DarkForm
     {
         /// <summary>
         /// Required designer variable.
@@ -42,6 +44,7 @@ namespace BagelAura
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.ControlBox = false;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.CornerStyle = CornerPreference.Round;
             this.Name = "CPUDisplay";
             this.Opacity = 0.75D;
             this.ShowIcon = false;
@@ -50,10 +53,9 @@ namespace BagelAura
             this.Text = "CPUDisplay";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.CPUDisplay_Paint);
             this.ResumeLayout(false);
-            this.BackColor = Color.FromArgb(255, 80, 68, 80);
+            this.BackColor = Color.FromArgb(255, 68, 68, 80);
             this.TransparencyKey = Color.White;
             this.Visible = true;
-
         }
 
         #endregion
