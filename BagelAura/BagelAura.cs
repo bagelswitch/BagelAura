@@ -45,6 +45,10 @@ namespace BagelAura
         static SimpleMovingAverage blueCalculator = new SimpleMovingAverage(k: 20);
         static SimpleMovingAverage greenCalculator = new SimpleMovingAverage(k: 20);
 
+        static SimpleMovingAverage redTextCalculator = new SimpleMovingAverage(k: 20);
+        static SimpleMovingAverage blueTextCalculator = new SimpleMovingAverage(k: 20);
+        static SimpleMovingAverage greenTextCalculator = new SimpleMovingAverage(k: 20);
+
         static SimpleMovingAverage redGraphCalculator = new SimpleMovingAverage(k: 5);
         static SimpleMovingAverage blueGraphCalculator = new SimpleMovingAverage(k: 5);
         static SimpleMovingAverage greenGraphCalculator = new SimpleMovingAverage(k: 5);
@@ -213,9 +217,11 @@ namespace BagelAura
                 int blue = 0;
                 int green = 0;
                 int red = 0;
+                float intensity = 0;
+
                 if (instCpuLoad > 6000)
                 {
-                    float intensity = (float)(instCpuLoad - 6000) / (float)1500;
+                    intensity = (float)(instCpuLoad - 6000) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     blue = 0;
@@ -224,7 +230,7 @@ namespace BagelAura
                 }
                 else if (instCpuLoad > 4500)
                 {
-                    float intensity = (float)(instCpuLoad - 4500) / (float)1500;
+                    intensity = (float)(instCpuLoad - 4500) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     blue = 0;
@@ -233,7 +239,7 @@ namespace BagelAura
                 }
                 else if (instCpuLoad > 3000)
                 {
-                    float intensity = (float)(instCpuLoad - 3000) / (float)1500;
+                    intensity = (float)(instCpuLoad - 3000) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     red = 0;
@@ -242,7 +248,7 @@ namespace BagelAura
                 }
                 else if (instCpuLoad > 1500)
                 {
-                    float intensity = (float)(instCpuLoad - 1500) / (float)1500;
+                    intensity = (float)(instCpuLoad - 1500) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     red = 0;
@@ -251,14 +257,25 @@ namespace BagelAura
                 }
                 else
                 {
-                    float intensity = (float)(instCpuLoad) / (float)1500;
+                    intensity = (float)(instCpuLoad) / (float)1500;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     red = 0;
                     green = 0;
                     blue = (int)(255 * intensity);
                 }
-                uint color = ColorFromBytes((byte) blueCalculator.Update(blue), (byte) greenCalculator.Update(green), (byte) redCalculator.Update(red));
+
+                Color activecolor = Color.FromArgb((int)redGraphCalculator.Update(red), (int)greenGraphCalculator.Update(green), (int)blueGraphCalculator.Update(blue));
+
+                intensity = (float)(instCpuLoad) / (float) 7500;
+                if (intensity > 1.0) intensity = (float)1.0;
+                if (intensity < 0.0) intensity = (float)0.0;
+                red = (int)(255 * intensity);
+                green = (int)(255 * intensity);
+                blue = (int)(255 * intensity);
+
+                uint color = ColorFromBytes((byte)blueCalculator.Update(blue), (byte)greenCalculator.Update((int)(0.9 * (float)green)), (byte)redCalculator.Update(red));
+                Color textColor = Color.FromArgb((int) blueTextCalculator.Update(255 - blue), (int) greenTextCalculator.Update(255 - green), (int) redTextCalculator.Update(255 - red));
 
                 mBoardLights[0].Color = color;
                 mBoardLights[1].Color = color;
@@ -273,10 +290,10 @@ namespace BagelAura
                 }
                 stickOne.Apply();
                 stickTwo.Apply();
-                
-                Color activecolor = Color.FromArgb((int) redGraphCalculator.Update(red), (int) greenGraphCalculator.Update(green), (int) blueGraphCalculator.Update(blue));
+
                 cpud.currentload = graphCpuLoad / 100;
-                cpud.currentcolor = activecolor;
+                cpud.currentColor = activecolor;
+                cpud.currentTextColor = textColor;
                 cpud.Invalidate();
             }
             k++;

@@ -17,7 +17,8 @@ namespace BagelAura
         private int graphHeight = 140;
         private float graphLine = 15.0F;
 
-        public Color currentcolor = Color.Black;
+        public Color currentColor = Color.Black;
+        public Color currentTextColor = Color.White;
         public int currentload = 0;
 
         public Point[] graphPoints = new Point[71];
@@ -49,6 +50,7 @@ namespace BagelAura
             if (currentload > 100) currentload = 100;
 
             this.CPUPct.Text = currentload.ToString("00") + "%";
+            this.CPUPct.ForeColor = currentTextColor;
 
             using (var gfx = e.Graphics)
             {
@@ -72,7 +74,7 @@ namespace BagelAura
                 }
                 graphPoints[i].X = segmentWidth * i;
                 graphPoints[i].Y = graphHeight - (int)graphLine - (int)currentload;
-                graphColors[i] = this.currentcolor;
+                graphColors[i] = this.currentColor;
             }
         }
     }
