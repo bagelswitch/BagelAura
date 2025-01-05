@@ -202,7 +202,7 @@ namespace BagelAura
         {
             if (active)
             {
-                int instCpuLoad = (int)(cpu.NextValue() * 100) - 500;
+                int instCpuLoad = (int)(cpu.NextValue() * 100);
                 int graphCpuLoad = graphCalculator.Update(instCpuLoad);
 
                 if (k == 1)

@@ -15,8 +15,7 @@ namespace BagelAura
     public partial class CPUDisplay : DarkForm
     {
         private int graphWidth = 713;
-        private int graphHeight = 140;
-        private float graphLine = 15.0F;
+        private int graphHeight = 150;
 
         public Color currentColor = Color.Black;
         public Color currentTextColor = Color.White;
@@ -80,7 +79,7 @@ namespace BagelAura
                     if(graphPoints[i+1].Y < maxVal) maxVal = graphPoints[i+1].Y;
                 }
                 graphPoints[i].X = segmentWidth * i;
-                graphPoints[i].Y = graphHeight - (int)graphLine - (int)currentload;
+                graphPoints[i].Y = graphHeight - ((currentload * graphHeight)/100); //graphHeight - currentload;
                 graphColors[i] = this.currentColor;
 
                 points = new Point[]{  new Point(graphPoints[i].X, graphPoints[i].Y),
@@ -93,12 +92,21 @@ namespace BagelAura
                     gfx.FillPolygon(brush, points, FillMode.Winding);
                 }
 
-                using (var pen = new Pen(currentTextColor, 4))
+                if (maxVal < graphHeight)
                 {
-                    gfx.DrawLine(pen, new Point(0, maxVal), new Point(CPUPct.Left - 10, maxVal));
-                    gfx.DrawLine(pen, new Point(CPUPct.Right + 10, maxVal), new Point(graphWidth, maxVal));
+                    using (var pen = new Pen(currentTextColor, 4))
+                    {
+                        gfx.DrawLine(pen, new Point(0, maxVal), new Point(CPUPct.Left - 10, maxVal));
+                        gfx.DrawLine(pen, new Point(CPUPct.Right + 10, maxVal), new Point(graphWidth, maxVal));
+                        pen.DashPattern = new float[] { 3, 5 };
+                        pen.Color = Color.DarkGray;
+                        pen.Width = 1;
+                        gfx.DrawLine(pen, new Point(0, (int)((float)(graphHeight) * 0.25)), new Point(graphWidth, (int)((float)(graphHeight) * 0.25)));
+                        gfx.DrawLine(pen, new Point(0, (int)((float)(graphHeight) * 0.50)), new Point(graphWidth, (int)((float)(graphHeight) * 0.50)));
+                        gfx.DrawLine(pen, new Point(0, (int)((float)(graphHeight) * 0.75)), new Point(graphWidth, (int)((float)(graphHeight) * 0.75)));
+                    }
                 }
-                maxVal = graphHeight - (maxVal + (int)graphLine);
+                maxVal = ((graphHeight - maxVal)*100)/graphHeight;
                 this.CPUPct.Text = maxVal.ToString("00") + "%";
                 this.CPUPct.ForeColor = currentTextColor;
             }
