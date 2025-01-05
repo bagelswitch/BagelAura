@@ -37,7 +37,10 @@ namespace BagelAura
             TopLeft.X = TopLeft.X + 10;
             TopLeft.Y = TopLeft.Y + 2350;
             this.Location = TopLeft;
-            //this.Bounds = new Rectangle(TopLeft.X, TopLeft.Y, graphWidth, graphHeight);
+
+            this.CPUPct.Location = new System.Drawing.Point(
+                                            (this.Width / 2) - (this.CPUPct.Width / 2),
+                                            (this.Height / 2) - (this.CPUPct.Height / 2)); //= new System.Drawing.Point(430, 50);
 
             segmentWidth = graphWidth / graphPoints.Length;
 

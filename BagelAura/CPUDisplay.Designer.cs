@@ -46,7 +46,6 @@ namespace BagelAura
             this.CPUPct.Font = new System.Drawing.Font("Quartz MS", 40F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.CPUPct.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.CPUPct.BackColor = System.Drawing.Color.Transparent;
-            this.CPUPct.Location = new System.Drawing.Point(430, 50);
             this.CPUPct.Name = "CPUPct";
             this.CPUPct.Size = new System.Drawing.Size(206, 96);
             this.CPUPct.TabIndex = 0;
