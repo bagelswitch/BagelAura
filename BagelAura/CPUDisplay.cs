@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AltUI.Forms;
+using Vanara.PInvoke;
 
 namespace BagelAura
 {
@@ -49,8 +50,9 @@ namespace BagelAura
             if (currentload < 0) currentload = 0;
             if (currentload > 100) currentload = 100;
 
-            this.CPUPct.Text = currentload.ToString("00") + "%";
-            this.CPUPct.ForeColor = currentTextColor;
+            int maxVal = graphHeight;
+
+            Point[] points = Array.Empty<Point>();
 
             using (var gfx = e.Graphics)
             {
@@ -59,7 +61,7 @@ namespace BagelAura
                 {
                     graphPoints[i].X = segmentWidth * i;
 
-                    Point[] points = {  new Point(graphPoints[i].X, graphPoints[i].Y), 
+                    points = new Point[]{ new Point(graphPoints[i].X, graphPoints[i].Y), 
                                         new Point(graphPoints[i + 1].X, graphPoints[i + 1].Y), 
                                         new Point(graphPoints[i + 1].X, graphHeight),
                                         new Point(graphPoints[i].X, graphHeight) };
@@ -71,10 +73,31 @@ namespace BagelAura
 
                     graphPoints[i].Y = graphPoints[i + 1].Y;
                     graphColors[i] = graphColors[i+1];
+
+                    if(graphPoints[i+1].Y < maxVal) maxVal = graphPoints[i+1].Y;
                 }
                 graphPoints[i].X = segmentWidth * i;
                 graphPoints[i].Y = graphHeight - (int)graphLine - (int)currentload;
                 graphColors[i] = this.currentColor;
+
+                points = new Point[]{  new Point(graphPoints[i].X, graphPoints[i].Y),
+                                        new Point(graphWidth, graphPoints[i].Y),
+                                        new Point(graphWidth, graphHeight),
+                                        new Point(graphPoints[i].X, graphHeight) };
+
+                using (var brush = new SolidBrush(graphColors[i]))
+                {
+                    gfx.FillPolygon(brush, points, FillMode.Winding);
+                }
+
+                using (var pen = new Pen(currentTextColor, 4))
+                {
+                    gfx.DrawLine(pen, new Point(0, maxVal), new Point(CPUPct.Left - 10, maxVal));
+                    gfx.DrawLine(pen, new Point(CPUPct.Right + 10, maxVal), new Point(graphWidth, maxVal));
+                }
+                maxVal = graphHeight - (maxVal + (int)graphLine);
+                this.CPUPct.Text = maxVal.ToString("00") + "%";
+                this.CPUPct.ForeColor = currentTextColor;
             }
         }
     }
