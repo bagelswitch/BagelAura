@@ -17,7 +17,9 @@ namespace BagelAura
     {
         static Boolean active = true;
 
-        static String[] others = { "HYTE.Nexus.Service", "HYTE Nexus", "wallpaper32", "AsusCertService", "asus_framework", "adb", "steamwebhelper", "steam", "nvcontainer", "NVIDIA Overlay", "NVDisplay.Container" };
+        static String[] others = { "HYTE.Nexus.Service", "HYTE Nexus", "wallpaper32", "AsusCertService", "asus_framework", 
+                                   "adb", "steamwebhelper", "steam", "nvcontainer", "NVIDIA Overlay", "NVDisplay.Container", 
+                                   "SearchIndexer", "OneDrive" };
 
         // Create SDK instance
         static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
