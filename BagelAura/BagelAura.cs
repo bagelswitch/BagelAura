@@ -221,36 +221,36 @@ namespace BagelAura
                 int red = 0;
                 float intensity = 0;
 
-                if (instCpuLoad > 6000)
+                if (instCpuLoad > 8000)
                 {
-                    intensity = (float)(instCpuLoad - 6000) / (float)1500;
+                    intensity = (float)(instCpuLoad - 8000) / (float)2000;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     blue = 0;
                     red = 255;
                     green = 255 - (int)(255 * intensity);
                 }
-                else if (instCpuLoad > 4500)
+                else if (instCpuLoad > 6000)
                 {
-                    intensity = (float)(instCpuLoad - 4500) / (float)1500;
+                    intensity = (float)(instCpuLoad - 6000) / (float)2000;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     blue = 0;
                     red = (int)(255 * intensity);
                     green = 255;
                 }
-                else if (instCpuLoad > 3000)
+                else if (instCpuLoad > 4000)
                 {
-                    intensity = (float)(instCpuLoad - 3000) / (float)1500;
+                    intensity = (float)(instCpuLoad - 4000) / (float)2000;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     red = 0;
                     blue = 255 - (int)(255 * intensity);
                     green = 255;
                 }
-                else if (instCpuLoad > 1500)
+                else if (instCpuLoad > 2000)
                 {
-                    intensity = (float)(instCpuLoad - 1500) / (float)1500;
+                    intensity = (float)(instCpuLoad - 2000) / (float)2000;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     red = 0;
@@ -259,7 +259,7 @@ namespace BagelAura
                 }
                 else
                 {
-                    intensity = (float)(instCpuLoad) / (float)1500;
+                    intensity = (float)(instCpuLoad) / (float)2000;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
                     red = 0;
@@ -269,7 +269,7 @@ namespace BagelAura
 
                 Color activecolor = Color.FromArgb((int)redGraphCalculator.Update(red), (int)greenGraphCalculator.Update(green), (int)blueGraphCalculator.Update(blue));
 
-                intensity = (float)(instCpuLoad) / (float) 7500;
+                intensity = (float)(instCpuLoad) / (float) 8000;
                 if (intensity > 1.0) intensity = (float)1.0;
                 if (intensity < 0.0) intensity = (float)0.0;
                 red = (int)(255 * intensity);
