@@ -19,7 +19,7 @@ namespace BagelAura
 
         static String[] others = { "HYTE.Nexus.Service", "HYTE Nexus", "wallpaper32", "AsusCertService", "asus_framework", 
                                    "adb", "steamwebhelper", "steam", "nvcontainer", "NVIDIA Overlay", "NVDisplay.Container", 
-                                   "SearchIndexer", "OneDrive" };
+                                   "SearchIndexer", "OneDrive", "nordvpn-service" };
 
         // Create SDK instance
         static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
@@ -62,10 +62,6 @@ namespace BagelAura
 
         static void ObtainControl(Boolean reEnum = true)
         {
-            // force all background processes to Eco QoS
-            Process process = Process.GetCurrentProcess();
-            EnableEcoqos(process);
-
             // Aquire control
             sdk.ReleaseControl(0);
             sdk.SwitchMode();
@@ -98,6 +94,12 @@ namespace BagelAura
                     }
                 }
             }
+
+            // force all background processes to Eco QoS
+            Process process = Process.GetCurrentProcess();
+            EnableEcoqos(process);
+
+            k = 2;
         }
 
         static uint AdjustColorIntensity(uint color, float intensity)
@@ -162,15 +164,14 @@ namespace BagelAura
         {
             if(e.Mode == PowerModes.Suspend)
             {
-                //cpud.Hide();
                 active = false;
+                aTimer.Stop();
                 sdk.ReleaseControl(0);
             } else if (e.Mode == PowerModes.Resume)
             {
-                active = false;
-                ObtainControl();
+                k = 1;
                 active = true;
-                //cpud.Show();
+                SetTimer();
             }
         }
 
@@ -202,9 +203,6 @@ namespace BagelAura
         {
             if (active)
             {
-                int instCpuLoad = (int)(cpu.NextValue() * 100);
-                int graphCpuLoad = graphCalculator.Update(instCpuLoad);
-
                 if (k == 1)
                 {
                     ObtainControl();
@@ -212,8 +210,10 @@ namespace BagelAura
                 else if (k >= 5000)
                 {
                     ObtainControl(false);
-                    k = 1;
                 }
+
+                int instCpuLoad = (int)(cpu.NextValue() * 100);
+                int graphCpuLoad = graphCalculator.Update(instCpuLoad);
 
                 // Set LEDs on mboard i/o panel
                 int blue = 0;
