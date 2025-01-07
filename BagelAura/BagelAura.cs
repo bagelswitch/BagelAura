@@ -276,7 +276,7 @@ namespace BagelAura
                 green = (int)(255 * intensity);
                 blue = (int)(255 * intensity);
 
-                uint color = ColorFromBytes((byte)blueCalculator.Update(blue), (byte)greenCalculator.Update((int)(0.9 * (float)green)), (byte)redCalculator.Update(red));
+                uint color = ColorFromBytes((byte)blueCalculator.Update(blue), (byte)greenCalculator.Update((int)((float)green * 0.8)), (byte)redCalculator.Update(red));
                 Color textColor = Color.FromArgb((int) blueTextCalculator.Update(255 - blue), (int) greenTextCalculator.Update(255 - green), (int) redTextCalculator.Update(255 - red));
 
                 mBoardLights[0].Color = color;
