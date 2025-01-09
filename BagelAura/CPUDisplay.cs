@@ -43,7 +43,7 @@ namespace BagelAura
             switch (status)
             {
                 case DriveStatus.Write:
-                    return Color.Yellow;
+                    return Color.Orange;
                 case DriveStatus.Read:
                     return Color.LightGreen;
                 default:
