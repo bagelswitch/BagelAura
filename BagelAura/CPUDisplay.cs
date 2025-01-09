@@ -84,8 +84,6 @@ namespace BagelAura
 
         private void CPUDisplay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            if (this.isDirty)
-            {
                 if (currentload < 0) currentload = 0;
                 if (currentload > 100) currentload = 100;
 
@@ -109,12 +107,17 @@ namespace BagelAura
                     {
                         gfx.FillPolygon(brush, points, FillMode.Winding);
                     }
-
-                    graphPoints[i].Y = graphPoints[i + 1].Y;
-                    graphColors[i] = graphColors[i + 1];
+                    if (this.isDirty)
+                    {
+                        graphPoints[i].Y = graphPoints[i + 1].Y;
+                        graphColors[i] = graphColors[i + 1];
+                    }
 
                     if (graphPoints[i + 1].Y < maxVal) maxVal = graphPoints[i + 1].Y;
                 }
+
+                this.isDirty = false;
+
                 graphPoints[i].X = segmentWidth * i;
                 graphPoints[i].Y = graphHeight - ((currentload * graphHeight) / 100);
                 graphColors[i] = this.currentColor;
@@ -152,9 +155,6 @@ namespace BagelAura
                 this.DiskD.ForeColor = DriveStatusColor(this.DriveDStatus);
                 this.DiskE.ForeColor = DriveStatusColor(this.DriveEStatus);
                 this.DiskF.ForeColor = DriveStatusColor(this.DriveFStatus);
-
-                this.isDirty = false;
-            }
         }
     }
 }
