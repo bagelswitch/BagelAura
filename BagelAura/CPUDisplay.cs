@@ -56,10 +56,9 @@ namespace BagelAura
             InitializeComponent();
 
             this.Bounds = new Rectangle(10, 0, graphWidth, graphHeight);
-            this.TopMost = true;
             Point TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
             TopLeft.X = TopLeft.X + 10;
-            TopLeft.Y = TopLeft.Y + 2350;
+            TopLeft.Y = TopLeft.Y + 2400;
             this.Location = TopLeft;
 
             this.CPUPct.Location = new System.Drawing.Point(

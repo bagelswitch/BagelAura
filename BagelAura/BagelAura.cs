@@ -50,7 +50,7 @@ namespace BagelAura
         static PerformanceCounter fRead = new PerformanceCounter("LogicalDisk", "Disk Read Bytes/sec", "f:");
         static PerformanceCounter fWrite = new PerformanceCounter("LogicalDisk", "Disk Write Bytes/sec", "f:");
 
-        private static int diskActivityThreshold = 10000;
+        private static int diskActivityThreshold = 100000;
 
         static SimpleMovingAverage graphCalculator = new SimpleMovingAverage(k: 5);
 
@@ -190,7 +190,7 @@ namespace BagelAura
         private static void SetTimer()
         {
             // Create a timer with a two second interval.
-            aTimer = new System.Timers.Timer(60);
+            aTimer = new System.Timers.Timer(90);
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;
