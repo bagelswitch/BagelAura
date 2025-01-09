@@ -32,7 +32,9 @@ namespace BagelAura
         static List<IAuraRgbLight> stickTwoLights = null;
         static List<IAuraRgbLight> mBoardLights = null;
 
-        private static System.Timers.Timer aTimer;
+        private static System.Timers.Timer cpuTimer;
+        private static System.Timers.Timer diskTimer;
+
 
         static PerformanceCounter cpu = new PerformanceCounter
         {
@@ -109,7 +111,6 @@ namespace BagelAura
             // force all background processes to Eco QoS
             Process process = Process.GetCurrentProcess();
             EnableEcoqos(process);
-            //cpud.Show();
 
             k = 2;
         }
@@ -177,24 +178,29 @@ namespace BagelAura
             if(e.Mode == PowerModes.Suspend)
             {
                 active = false;
-                aTimer.Stop();
+                cpuTimer.Stop();
+                diskTimer.Stop();
                 sdk.ReleaseControl(0);
             } else if (e.Mode == PowerModes.Resume)
             {
                 k = 1;
                 active = true;
-                SetTimer();
+                SetTimers();
             }
         }
 
-        private static void SetTimer()
+        private static void SetTimers()
         {
-            // Create a timer with a two second interval.
-            aTimer = new System.Timers.Timer(90);
-            // Hook up the Elapsed event for the timer. 
-            aTimer.Elapsed += OnTimedEvent;
-            aTimer.AutoReset = true;
-            aTimer.Enabled = true;
+            cpuTimer = new System.Timers.Timer(60);
+            diskTimer = new System.Timers.Timer(240);
+
+            cpuTimer.Elapsed += OnTimedCPUEvent;
+            cpuTimer.AutoReset = true;
+            cpuTimer.Enabled = true;
+
+            diskTimer.Elapsed += OnTimedDiskEvent;
+            diskTimer.AutoReset = true;
+            diskTimer.Enabled = true;
         }
 
         static void Main(string[] args)
@@ -203,15 +209,18 @@ namespace BagelAura
             process.Exited += new EventHandler(OnExit);
             SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(OnPowerModeChanged);
 
-            SetTimer();
+            SetTimers();
 
             Application.Run();
 
-            aTimer.Stop();
-            aTimer.Dispose();
+            cpuTimer.Stop();
+            cpuTimer.Dispose();
+
+            diskTimer.Stop();
+            diskTimer.Dispose();
         }
 
-        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        private static void OnTimedCPUEvent(Object source, ElapsedEventArgs e)
         {
             if (active)
             {
@@ -309,7 +318,14 @@ namespace BagelAura
                 cpud.currentColor = activecolor;
                 cpud.currentTextColor = textColor;
 
-                if(cWrite.NextValue() > diskActivityThreshold) { cpud.DriveCStatus = CPUDisplay.DriveStatus.Write; }
+                cpud.Invalidate();
+            }
+            k++;
+        }
+
+        private static void OnTimedDiskEvent(Object source, ElapsedEventArgs e)
+        {
+                if (cWrite.NextValue() > diskActivityThreshold) { cpud.DriveCStatus = CPUDisplay.DriveStatus.Write; }
                 else if (cRead.NextValue() > diskActivityThreshold) { cpud.DriveCStatus = CPUDisplay.DriveStatus.Read; }
                 else cpud.DriveCStatus = CPUDisplay.DriveStatus.Idle;
 
@@ -324,10 +340,6 @@ namespace BagelAura
                 if (fWrite.NextValue() > diskActivityThreshold) { cpud.DriveFStatus = CPUDisplay.DriveStatus.Write; }
                 else if (fRead.NextValue() > diskActivityThreshold) { cpud.DriveFStatus = CPUDisplay.DriveStatus.Read; }
                 else cpud.DriveFStatus = CPUDisplay.DriveStatus.Idle;
-
-                cpud.Invalidate();
-            }
-            k++;
         }
     }
 }
