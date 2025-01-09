@@ -26,6 +26,31 @@ namespace BagelAura
 
         private int segmentWidth;
 
+        public DriveStatus DriveCStatus = DriveStatus.Idle;
+        public DriveStatus DriveDStatus = DriveStatus.Idle;
+        public DriveStatus DriveEStatus = DriveStatus.Idle;
+        public DriveStatus DriveFStatus = DriveStatus.Idle;
+
+        public enum DriveStatus
+        {
+            Read,
+            Write,
+            Idle
+        }
+
+        private Color DriveStatusColor(DriveStatus status)
+        {
+            switch (status)
+            {
+                case DriveStatus.Write:
+                    return Color.Yellow;
+                case DriveStatus.Read:
+                    return Color.LightGreen;
+                default:
+                    return Color.DarkGray;
+            }
+        }
+
         public CPUDisplay()
         {
             InitializeComponent();
@@ -44,7 +69,11 @@ namespace BagelAura
             segmentWidth = graphWidth / graphPoints.Length;
 
             this.Visible = true;
-            this.CPUPct.Visible= true;
+            this.CPUPct.Visible = true;
+            this.DiskC.Visible = true;
+            this.DiskD.Visible = true;
+            this.DiskE.Visible = true;
+            this.DiskF.Visible = true;
 
             this.SetStyle(
                             System.Windows.Forms.ControlStyles.UserPaint |
@@ -114,6 +143,11 @@ namespace BagelAura
             maxVal = ((graphHeight - maxVal)*100)/graphHeight;
             this.CPUPct.Text = maxVal.ToString("00") + "%";
             this.CPUPct.ForeColor = currentTextColor;
+
+            this.DiskC.ForeColor = DriveStatusColor(this.DriveCStatus);
+            this.DiskD.ForeColor = DriveStatusColor(this.DriveDStatus);
+            this.DiskE.ForeColor = DriveStatusColor(this.DriveEStatus);
+            this.DiskF.ForeColor = DriveStatusColor(this.DriveFStatus);
         }
     }
 }

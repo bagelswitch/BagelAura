@@ -41,6 +41,17 @@ namespace BagelAura
             InstanceName = "_Total"
         };
 
+        static PerformanceCounter cRead = new PerformanceCounter("LogicalDisk", "Disk Read Bytes/sec", "c:");
+        static PerformanceCounter cWrite = new PerformanceCounter("LogicalDisk", "Disk Write Bytes/sec", "c:");
+        static PerformanceCounter dRead = new PerformanceCounter("LogicalDisk", "Disk Read Bytes/sec", "d:");
+        static PerformanceCounter dWrite = new PerformanceCounter("LogicalDisk", "Disk Write Bytes/sec", "d:");
+        static PerformanceCounter eRead = new PerformanceCounter("LogicalDisk", "Disk Read Bytes/sec", "e:");
+        static PerformanceCounter eWrite = new PerformanceCounter("LogicalDisk", "Disk Write Bytes/sec", "e:");
+        static PerformanceCounter fRead = new PerformanceCounter("LogicalDisk", "Disk Read Bytes/sec", "f:");
+        static PerformanceCounter fWrite = new PerformanceCounter("LogicalDisk", "Disk Write Bytes/sec", "f:");
+
+        private static int diskActivityThreshold = 10000;
+
         static SimpleMovingAverage graphCalculator = new SimpleMovingAverage(k: 5);
 
         static SimpleMovingAverage redCalculator = new SimpleMovingAverage(k: 20);
@@ -98,6 +109,7 @@ namespace BagelAura
             // force all background processes to Eco QoS
             Process process = Process.GetCurrentProcess();
             EnableEcoqos(process);
+            //cpud.Show();
 
             k = 2;
         }
@@ -296,6 +308,23 @@ namespace BagelAura
                 cpud.currentload = graphCpuLoad / 100;
                 cpud.currentColor = activecolor;
                 cpud.currentTextColor = textColor;
+
+                if(cWrite.NextValue() > diskActivityThreshold) { cpud.DriveCStatus = CPUDisplay.DriveStatus.Write; }
+                else if (cRead.NextValue() > diskActivityThreshold) { cpud.DriveCStatus = CPUDisplay.DriveStatus.Read; }
+                else cpud.DriveCStatus = CPUDisplay.DriveStatus.Idle;
+
+                if (dWrite.NextValue() > diskActivityThreshold) { cpud.DriveDStatus = CPUDisplay.DriveStatus.Write; }
+                else if (dRead.NextValue() > diskActivityThreshold) { cpud.DriveDStatus = CPUDisplay.DriveStatus.Read; }
+                else cpud.DriveDStatus = CPUDisplay.DriveStatus.Idle;
+
+                if (eWrite.NextValue() > diskActivityThreshold) { cpud.DriveEStatus = CPUDisplay.DriveStatus.Write; }
+                else if (eRead.NextValue() > diskActivityThreshold) { cpud.DriveEStatus = CPUDisplay.DriveStatus.Read; }
+                else cpud.DriveEStatus = CPUDisplay.DriveStatus.Idle;
+
+                if (fWrite.NextValue() > diskActivityThreshold) { cpud.DriveFStatus = CPUDisplay.DriveStatus.Write; }
+                else if (fRead.NextValue() > diskActivityThreshold) { cpud.DriveFStatus = CPUDisplay.DriveStatus.Read; }
+                else cpud.DriveFStatus = CPUDisplay.DriveStatus.Idle;
+
                 cpud.Invalidate();
             }
             k++;
