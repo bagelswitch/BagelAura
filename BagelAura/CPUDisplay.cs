@@ -14,6 +14,8 @@ namespace BagelAura
 {
     public partial class CPUDisplay : DarkForm
     {
+        public bool isDirty = false;
+
         private int graphWidth = 713;
         private int graphHeight = 150;
 
@@ -82,23 +84,44 @@ namespace BagelAura
 
         private void CPUDisplay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            if (currentload < 0) currentload = 0;
-            if (currentload > 100) currentload = 100;
-
-            int maxVal = graphHeight;
-
-            Point[] points = Array.Empty<Point>();
-
-            Graphics gfx = e.Graphics;
-
-            int i = 0;
-            for (; i < graphPoints.Length - 1; i++)
+            if (this.isDirty)
             {
-                graphPoints[i].X = segmentWidth * i;
+                if (currentload < 0) currentload = 0;
+                if (currentload > 100) currentload = 100;
 
-                points = new Point[]{ new Point(graphPoints[i].X, graphPoints[i].Y), 
-                                    new Point(graphPoints[i + 1].X, graphPoints[i + 1].Y), 
+                int maxVal = graphHeight;
+
+                Point[] points = Array.Empty<Point>();
+
+                Graphics gfx = e.Graphics;
+
+                int i = 0;
+                for (; i < graphPoints.Length - 1; i++)
+                {
+                    graphPoints[i].X = segmentWidth * i;
+
+                    points = new Point[]{ new Point(graphPoints[i].X, graphPoints[i].Y),
+                                    new Point(graphPoints[i + 1].X, graphPoints[i + 1].Y),
                                     new Point(graphPoints[i + 1].X, graphHeight),
+                                    new Point(graphPoints[i].X, graphHeight) };
+
+                    using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(1, 0), graphColors[i], graphColors[i + 1]))
+                    {
+                        gfx.FillPolygon(brush, points, FillMode.Winding);
+                    }
+
+                    graphPoints[i].Y = graphPoints[i + 1].Y;
+                    graphColors[i] = graphColors[i + 1];
+
+                    if (graphPoints[i + 1].Y < maxVal) maxVal = graphPoints[i + 1].Y;
+                }
+                graphPoints[i].X = segmentWidth * i;
+                graphPoints[i].Y = graphHeight - ((currentload * graphHeight) / 100);
+                graphColors[i] = this.currentColor;
+
+                points = new Point[]{  new Point(graphPoints[i].X, graphPoints[i].Y),
+                                    new Point(graphWidth, graphPoints[i].Y),
+                                    new Point(graphWidth, graphHeight),
                                     new Point(graphPoints[i].X, graphHeight) };
 
                 using (var brush = new SolidBrush(graphColors[i]))
@@ -106,31 +129,14 @@ namespace BagelAura
                     gfx.FillPolygon(brush, points, FillMode.Winding);
                 }
 
-                graphPoints[i].Y = graphPoints[i + 1].Y;
-                graphColors[i] = graphColors[i+1];
 
-                if(graphPoints[i+1].Y < maxVal) maxVal = graphPoints[i+1].Y;
-            }
-            graphPoints[i].X = segmentWidth * i;
-            graphPoints[i].Y = graphHeight - ((currentload * graphHeight)/100); //graphHeight - currentload;
-            graphColors[i] = this.currentColor;
-
-            points = new Point[]{  new Point(graphPoints[i].X, graphPoints[i].Y),
-                                    new Point(graphWidth, graphPoints[i].Y),
-                                    new Point(graphWidth, graphHeight),
-                                    new Point(graphPoints[i].X, graphHeight) };
-
-            using (var brush = new SolidBrush(graphColors[i]))
-            {
-                gfx.FillPolygon(brush, points, FillMode.Winding);
-            }
-
-            if (maxVal < graphHeight)
-            {
                 using (var pen = new Pen(currentTextColor, 4))
                 {
-                    gfx.DrawLine(pen, new Point(0, maxVal), new Point(CPUPct.Left - 10, maxVal));
-                    gfx.DrawLine(pen, new Point(CPUPct.Right + 10, maxVal), new Point(graphWidth, maxVal));
+                    if (maxVal < graphHeight)
+                    {
+                        gfx.DrawLine(pen, new Point(0, maxVal), new Point(CPUPct.Left - 10, maxVal));
+                        gfx.DrawLine(pen, new Point(CPUPct.Right + 10, maxVal), new Point(graphWidth, maxVal));
+                    }
                     pen.DashPattern = new float[] { 3, 5 };
                     pen.Color = Color.DarkGray;
                     pen.Width = 1;
@@ -138,15 +144,17 @@ namespace BagelAura
                     gfx.DrawLine(pen, new Point(0, (int)((float)(graphHeight) * 0.50)), new Point(graphWidth, (int)((float)(graphHeight) * 0.50)));
                     gfx.DrawLine(pen, new Point(0, (int)((float)(graphHeight) * 0.75)), new Point(graphWidth, (int)((float)(graphHeight) * 0.75)));
                 }
-            }
-            maxVal = ((graphHeight - maxVal)*100)/graphHeight;
-            this.CPUPct.Text = maxVal.ToString("00") + "%";
-            this.CPUPct.ForeColor = currentTextColor;
+                maxVal = ((graphHeight - maxVal) * 100) / graphHeight;
+                this.CPUPct.Text = maxVal.ToString("00") + "%";
+                this.CPUPct.ForeColor = currentTextColor;
 
-            this.DiskC.ForeColor = DriveStatusColor(this.DriveCStatus);
-            this.DiskD.ForeColor = DriveStatusColor(this.DriveDStatus);
-            this.DiskE.ForeColor = DriveStatusColor(this.DriveEStatus);
-            this.DiskF.ForeColor = DriveStatusColor(this.DriveFStatus);
+                this.DiskC.ForeColor = DriveStatusColor(this.DriveCStatus);
+                this.DiskD.ForeColor = DriveStatusColor(this.DriveDStatus);
+                this.DiskE.ForeColor = DriveStatusColor(this.DriveEStatus);
+                this.DiskF.ForeColor = DriveStatusColor(this.DriveFStatus);
+
+                this.isDirty = false;
+            }
         }
     }
 }
