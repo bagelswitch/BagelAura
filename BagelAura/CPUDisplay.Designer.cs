@@ -134,7 +134,7 @@ namespace BagelAura
             this.Network.Name = "Network";
             this.Network.Size = new System.Drawing.Size(30, 30);
             this.Network.TabIndex = 1;
-            this.Network.Text = "*";
+            this.Network.Text = "N";
             this.Network.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CPUDisplay
