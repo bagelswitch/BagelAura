@@ -40,6 +40,7 @@ namespace BagelAura
             this.DiskE = new System.Windows.Forms.Label();
             this.DiskF = new System.Windows.Forms.Label();
             this.DiskW = new System.Windows.Forms.Label();
+            this.Network = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // CPUPct
@@ -123,6 +124,19 @@ namespace BagelAura
             this.DiskW.Text = "W";
             this.DiskW.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // Network
+            // 
+            this.Network.AutoSize = true;
+            this.Network.BackColor = System.Drawing.Color.Transparent;
+            this.Network.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.Network.ForeColor = Color.LightGreen;
+            this.Network.Location = new System.Drawing.Point(960, 5);
+            this.Network.Name = "Network";
+            this.Network.Size = new System.Drawing.Size(30, 30);
+            this.Network.TabIndex = 1;
+            this.Network.Text = "*";
+            this.Network.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // CPUDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -135,6 +149,7 @@ namespace BagelAura
             this.Controls.Add(this.DiskE);
             this.Controls.Add(this.DiskF);
             this.Controls.Add(this.DiskW);
+            this.Controls.Add(this.Network);
             this.Controls.Add(this.CPUPct);
             this.CornerStyle = AltUI.Forms.DarkForm.CornerPreference.Round;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -161,5 +176,6 @@ namespace BagelAura
         private Label DiskE;
         private Label DiskF;
         private Label DiskW;
+        private Label Network;
     }
 }

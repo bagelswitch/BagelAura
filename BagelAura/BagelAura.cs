@@ -54,7 +54,14 @@ namespace BagelAura
         static PerformanceCounter wRead = new PerformanceCounter("LogicalDisk", "Disk Read Bytes/sec", "w:");
         static PerformanceCounter wWrite = new PerformanceCounter("LogicalDisk", "Disk Write Bytes/sec", "w:");
 
+        static PerformanceCounter netSend = new PerformanceCounter("Network Interface", "Bytes Sent/sec", "Intel[R] Wi-Fi 7 BE200 320MHz");
+        static PerformanceCounter netReceive = new PerformanceCounter("Network Interface", "Bytes Received/sec", "Intel[R] Wi-Fi 7 BE200 320MHz");
+
+        static SimpleMovingAverage netRecCalculator = new SimpleMovingAverage(5);
+        static SimpleMovingAverage netSendCalculator = new SimpleMovingAverage(5);
+
         private static int diskActivityThreshold = 100000;
+        private static int networkActivityThreshold = 10000;
 
         static SimpleMovingAverage graphCalculator = new SimpleMovingAverage(k: 5);
 
@@ -347,6 +354,12 @@ namespace BagelAura
             if (wWrite.NextValue() > diskActivityThreshold) { cpud.DriveWStatus = CPUDisplay.DriveStatus.Write; }
             else if (wRead.NextValue() > diskActivityThreshold) { cpud.DriveWStatus = CPUDisplay.DriveStatus.Read; }
             else cpud.DriveWStatus = CPUDisplay.DriveStatus.Idle;
+
+            float netSendVal = netSendCalculator.Update((int) netSend.NextValue());
+            float netRecVal = netRecCalculator.Update((int) netReceive.NextValue());
+            if (netSendVal > netRecVal && netSendVal > networkActivityThreshold) { cpud.NetStatus = CPUDisplay.NetworkStatus.Send; }
+            else if (netRecVal > netSendVal && netRecVal > networkActivityThreshold) { cpud.NetStatus = CPUDisplay.NetworkStatus.Receive; }
+            else cpud.NetStatus = CPUDisplay.NetworkStatus.Idle;
         }
     }
 }
