@@ -39,6 +39,7 @@ namespace BagelAura
             this.DiskD = new System.Windows.Forms.Label();
             this.DiskE = new System.Windows.Forms.Label();
             this.DiskF = new System.Windows.Forms.Label();
+            this.DiskW = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // CPUPct
@@ -109,6 +110,19 @@ namespace BagelAura
             this.DiskF.Text = "F";
             this.DiskF.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // DiskW
+            // 
+            this.DiskW.AutoSize = true;
+            this.DiskW.BackColor = System.Drawing.Color.Transparent;
+            this.DiskW.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.DiskW.ForeColor = Color.LightGreen;
+            this.DiskW.Location = new System.Drawing.Point(165, 5);
+            this.DiskW.Name = "DiskW";
+            this.DiskW.Size = new System.Drawing.Size(30, 30);
+            this.DiskW.TabIndex = 1;
+            this.DiskW.Text = "W";
+            this.DiskW.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // CPUDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -120,6 +134,7 @@ namespace BagelAura
             this.Controls.Add(this.DiskD);
             this.Controls.Add(this.DiskE);
             this.Controls.Add(this.DiskF);
+            this.Controls.Add(this.DiskW);
             this.Controls.Add(this.CPUPct);
             this.CornerStyle = AltUI.Forms.DarkForm.CornerPreference.Round;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -145,5 +160,6 @@ namespace BagelAura
         private Label DiskD;
         private Label DiskE;
         private Label DiskF;
+        private Label DiskW;
     }
 }

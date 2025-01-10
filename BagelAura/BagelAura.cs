@@ -51,6 +51,8 @@ namespace BagelAura
         static PerformanceCounter eWrite = new PerformanceCounter("LogicalDisk", "Disk Write Bytes/sec", "e:");
         static PerformanceCounter fRead = new PerformanceCounter("LogicalDisk", "Disk Read Bytes/sec", "f:");
         static PerformanceCounter fWrite = new PerformanceCounter("LogicalDisk", "Disk Write Bytes/sec", "f:");
+        static PerformanceCounter wRead = new PerformanceCounter("LogicalDisk", "Disk Read Bytes/sec", "w:");
+        static PerformanceCounter wWrite = new PerformanceCounter("LogicalDisk", "Disk Write Bytes/sec", "w:");
 
         private static int diskActivityThreshold = 100000;
 
@@ -326,21 +328,25 @@ namespace BagelAura
 
         private static void OnTimedDiskEvent(Object source, ElapsedEventArgs e)
         {
-                if (cWrite.NextValue() > diskActivityThreshold) { cpud.DriveCStatus = CPUDisplay.DriveStatus.Write; }
-                else if (cRead.NextValue() > diskActivityThreshold) { cpud.DriveCStatus = CPUDisplay.DriveStatus.Read; }
-                else cpud.DriveCStatus = CPUDisplay.DriveStatus.Idle;
+            if (cWrite.NextValue() > diskActivityThreshold) { cpud.DriveCStatus = CPUDisplay.DriveStatus.Write; }
+            else if (cRead.NextValue() > diskActivityThreshold) { cpud.DriveCStatus = CPUDisplay.DriveStatus.Read; }
+            else cpud.DriveCStatus = CPUDisplay.DriveStatus.Idle;
 
-                if (dWrite.NextValue() > diskActivityThreshold) { cpud.DriveDStatus = CPUDisplay.DriveStatus.Write; }
-                else if (dRead.NextValue() > diskActivityThreshold) { cpud.DriveDStatus = CPUDisplay.DriveStatus.Read; }
-                else cpud.DriveDStatus = CPUDisplay.DriveStatus.Idle;
+            if (dWrite.NextValue() > diskActivityThreshold) { cpud.DriveDStatus = CPUDisplay.DriveStatus.Write; }
+            else if (dRead.NextValue() > diskActivityThreshold) { cpud.DriveDStatus = CPUDisplay.DriveStatus.Read; }
+            else cpud.DriveDStatus = CPUDisplay.DriveStatus.Idle;
 
-                if (eWrite.NextValue() > diskActivityThreshold) { cpud.DriveEStatus = CPUDisplay.DriveStatus.Write; }
-                else if (eRead.NextValue() > diskActivityThreshold) { cpud.DriveEStatus = CPUDisplay.DriveStatus.Read; }
-                else cpud.DriveEStatus = CPUDisplay.DriveStatus.Idle;
+            if (eWrite.NextValue() > diskActivityThreshold) { cpud.DriveEStatus = CPUDisplay.DriveStatus.Write; }
+            else if (eRead.NextValue() > diskActivityThreshold) { cpud.DriveEStatus = CPUDisplay.DriveStatus.Read; }
+            else cpud.DriveEStatus = CPUDisplay.DriveStatus.Idle;
 
-                if (fWrite.NextValue() > diskActivityThreshold) { cpud.DriveFStatus = CPUDisplay.DriveStatus.Write; }
-                else if (fRead.NextValue() > diskActivityThreshold) { cpud.DriveFStatus = CPUDisplay.DriveStatus.Read; }
-                else cpud.DriveFStatus = CPUDisplay.DriveStatus.Idle;
+            if (fWrite.NextValue() > diskActivityThreshold) { cpud.DriveFStatus = CPUDisplay.DriveStatus.Write; }
+            else if (fRead.NextValue() > diskActivityThreshold) { cpud.DriveFStatus = CPUDisplay.DriveStatus.Read; }
+            else cpud.DriveFStatus = CPUDisplay.DriveStatus.Idle;
+
+            if (wWrite.NextValue() > diskActivityThreshold) { cpud.DriveWStatus = CPUDisplay.DriveStatus.Write; }
+            else if (wRead.NextValue() > diskActivityThreshold) { cpud.DriveWStatus = CPUDisplay.DriveStatus.Read; }
+            else cpud.DriveWStatus = CPUDisplay.DriveStatus.Idle;
         }
     }
 }

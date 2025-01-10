@@ -32,6 +32,7 @@ namespace BagelAura
         public DriveStatus DriveDStatus = DriveStatus.Idle;
         public DriveStatus DriveEStatus = DriveStatus.Idle;
         public DriveStatus DriveFStatus = DriveStatus.Idle;
+        public DriveStatus DriveWStatus = DriveStatus.Idle;
 
         public enum DriveStatus
         {
@@ -75,6 +76,7 @@ namespace BagelAura
             this.DiskD.Visible = true;
             this.DiskE.Visible = true;
             this.DiskF.Visible = true;
+            this.DiskW.Visible = true;
 
             this.SetStyle(
                             System.Windows.Forms.ControlStyles.UserPaint |
@@ -155,6 +157,7 @@ namespace BagelAura
                 this.DiskD.ForeColor = DriveStatusColor(this.DriveDStatus);
                 this.DiskE.ForeColor = DriveStatusColor(this.DriveEStatus);
                 this.DiskF.ForeColor = DriveStatusColor(this.DriveFStatus);
+                this.DiskW.ForeColor = DriveStatusColor(this.DriveWStatus);
         }
     }
 }
