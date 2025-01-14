@@ -35,6 +35,7 @@ namespace BagelAura
         private void InitializeComponent()
         {
             this.CPUPct = new System.Windows.Forms.Label();
+            this.CPUMax = new System.Windows.Forms.Label();
             this.DiskC = new System.Windows.Forms.Label();
             this.DiskD = new System.Windows.Forms.Label();
             this.DiskE = new System.Windows.Forms.Label();
@@ -58,6 +59,22 @@ namespace BagelAura
             this.CPUPct.TabIndex = 0;
             this.CPUPct.Text = "00%";
             this.CPUPct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CPUMax
+            // 
+            this.CPUMax.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CPUMax.AutoSize = true;
+            this.CPUMax.BackColor = System.Drawing.Color.Transparent;
+            this.CPUMax.Font = new System.Drawing.Font("Quartz MS", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.CPUMax.ForeColor = Color.Gray;
+            this.CPUMax.Location = new System.Drawing.Point(300, 200);
+            this.CPUMax.Name = "CPUMax";
+            this.CPUMax.Size = new System.Drawing.Size(100, 50);
+            this.CPUMax.TabIndex = 0;
+            this.CPUMax.Text = "00%";
+            this.CPUMax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // DiskC
             // 
@@ -151,6 +168,7 @@ namespace BagelAura
             this.Controls.Add(this.DiskW);
             this.Controls.Add(this.Network);
             this.Controls.Add(this.CPUPct);
+            this.Controls.Add(this.CPUMax);
             this.CornerStyle = AltUI.Forms.DarkForm.CornerPreference.Round;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -171,6 +189,7 @@ namespace BagelAura
         #endregion
 
         private Label CPUPct;
+        private Label CPUMax;
         private Label DiskC;
         private Label DiskD;
         private Label DiskE;

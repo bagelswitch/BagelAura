@@ -23,6 +23,8 @@ namespace BagelAura
         public Color currentTextColor = Color.White;
         public int currentload = 0;
 
+        static SimpleMovingAverage lineCalculator = new SimpleMovingAverage(k: 20);
+
         public Point[] graphPoints = new Point[71];
         public Color[] graphColors = new Color[71];
 
@@ -90,10 +92,15 @@ namespace BagelAura
                                             (this.Width / 2) - (this.CPUPct.Width / 2),
                                             (this.Height / 2) - (this.CPUPct.Height / 2)); //= new System.Drawing.Point(430, 50);
 
+            this.CPUMax.Location = new System.Drawing.Point(
+                                this.CPUPct.Left - 80,
+                                this.CPUPct.Top - 20 );
+
             segmentWidth = graphWidth / graphPoints.Length;
 
             this.Visible = true;
             this.CPUPct.Visible = true;
+            this.CPUMax.Visible = true;
             this.DiskC.Visible = true;
             this.DiskD.Visible = true;
             this.DiskE.Visible = true;
@@ -157,14 +164,23 @@ namespace BagelAura
                 gfx.FillPolygon(brush, points, FillMode.Winding);
             }
 
+            int lineSMA = lineCalculator.Update(graphPoints[i].Y);
 
-            using (var pen = new Pen(currentTextColor, 4))
+            using (var pen = new Pen(currentTextColor, 3))
             {
+                if (graphPoints[i].Y < graphHeight)
+                {
+                    gfx.DrawLine(pen, new Point(0, lineSMA), new Point(CPUPct.Left - 10, lineSMA));
+                    gfx.DrawLine(pen, new Point(CPUPct.Right + 10, lineSMA), new Point(graphWidth, lineSMA));
+                }
+
+                pen.Color = Color.Gray;
+
                 if (maxVal < graphHeight)
                 {
-                    gfx.DrawLine(pen, new Point(0, maxVal), new Point(CPUPct.Left - 10, maxVal));
-                    gfx.DrawLine(pen, new Point(CPUPct.Right + 10, maxVal), new Point(graphWidth, maxVal));
+                    gfx.DrawLine(pen, new Point(0, maxVal), new Point(graphWidth, maxVal));
                 }
+
                 pen.DashPattern = new float[] { 3, 5 };
                 pen.Color = Color.DarkGray;
                 pen.Width = 1;
@@ -172,9 +188,13 @@ namespace BagelAura
                 gfx.DrawLine(pen, new Point(0, (int)((float)(graphHeight) * 0.50)), new Point(graphWidth, (int)((float)(graphHeight) * 0.50)));
                 gfx.DrawLine(pen, new Point(0, (int)((float)(graphHeight) * 0.75)), new Point(graphWidth, (int)((float)(graphHeight) * 0.75)));
             }
-            maxVal = ((graphHeight - maxVal) * 100) / graphHeight;
-            this.CPUPct.Text = maxVal.ToString("00") + "%";
+            lineSMA = ((graphHeight - lineSMA) * 100) / graphHeight;
+            this.CPUPct.Text = lineSMA.ToString("00") + "%";
             this.CPUPct.ForeColor = currentTextColor;
+
+            maxVal = ((graphHeight - maxVal) * 100) / graphHeight;
+            this.CPUMax.Text = maxVal.ToString("00") + "%";
+            this.CPUMax.ForeColor = Color.Gray;
 
             this.DiskC.ForeColor = DriveStatusColor(this.DriveCStatus);
             this.DiskD.ForeColor = DriveStatusColor(this.DriveDStatus);
