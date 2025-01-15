@@ -20,7 +20,6 @@ namespace BagelAura
         private int graphHeight = 150;
 
         public Color currentColor = Color.Black;
-        public Color currentTextColor = Color.White;
         public int currentload = 0;
 
         static SimpleMovingAverage lineCalculator = new SimpleMovingAverage(k: 20);
@@ -93,7 +92,7 @@ namespace BagelAura
                                             (this.Height / 2) - (this.CPUPct.Height / 2)); //= new System.Drawing.Point(430, 50);
 
             this.CPUMax.Location = new System.Drawing.Point(
-                                this.CPUPct.Left - 80,
+                                this.CPUPct.Right + 20,
                                 this.CPUPct.Top - 20 );
 
             segmentWidth = graphWidth / graphPoints.Length;
@@ -166,7 +165,7 @@ namespace BagelAura
 
             int lineSMA = lineCalculator.Update(graphPoints[i].Y);
 
-            using (var pen = new Pen(currentTextColor, 3))
+            using (var pen = new Pen(Color.LightGray, 3))
             {
                 if (graphPoints[i].Y < graphHeight)
                 {
@@ -178,7 +177,8 @@ namespace BagelAura
 
                 if (maxVal < graphHeight)
                 {
-                    gfx.DrawLine(pen, new Point(0, maxVal), new Point(graphWidth, maxVal));
+                    gfx.DrawLine(pen, new Point(0, maxVal), new Point(CPUPct.Left - 10, maxVal));
+                    gfx.DrawLine(pen, new Point(CPUPct.Right + 10, maxVal), new Point(graphWidth, maxVal));
                 }
 
                 pen.DashPattern = new float[] { 3, 5 };
@@ -190,7 +190,7 @@ namespace BagelAura
             }
             lineSMA = ((graphHeight - lineSMA) * 100) / graphHeight;
             this.CPUPct.Text = lineSMA.ToString("00") + "%";
-            this.CPUPct.ForeColor = currentTextColor;
+            this.CPUPct.ForeColor = Color.LightGray;
 
             maxVal = ((graphHeight - maxVal) * 100) / graphHeight;
             this.CPUMax.Text = maxVal.ToString("00") + "%";

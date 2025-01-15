@@ -325,7 +325,6 @@ namespace BagelAura
 
                 cpud.currentload = graphCpuLoad / 100;
                 cpud.currentColor = activecolor;
-                cpud.currentTextColor = textColor;
 
                 cpud.isDirty= true;
                 cpud.Invalidate();
