@@ -68,10 +68,6 @@ namespace BagelAura
         static SimpleMovingAverage blueCalculator = new SimpleMovingAverage(k: 20);
         static SimpleMovingAverage greenCalculator = new SimpleMovingAverage(k: 20);
 
-        static SimpleMovingAverage redTextCalculator = new SimpleMovingAverage(k: 20);
-        static SimpleMovingAverage blueTextCalculator = new SimpleMovingAverage(k: 20);
-        static SimpleMovingAverage greenTextCalculator = new SimpleMovingAverage(k: 20);
-
         static SimpleMovingAverage redGraphCalculator = new SimpleMovingAverage(k: 5);
         static SimpleMovingAverage blueGraphCalculator = new SimpleMovingAverage(k: 5);
         static SimpleMovingAverage greenGraphCalculator = new SimpleMovingAverage(k: 5);
@@ -199,7 +195,7 @@ namespace BagelAura
 
         private static void SetTimers()
         {
-            cpuTimer = new System.Timers.Timer(60);
+            cpuTimer = new System.Timers.Timer(90);
             diskTimer = new System.Timers.Timer(240);
 
             cpuTimer.Elapsed += OnTimedCPUEvent;
@@ -302,16 +298,14 @@ namespace BagelAura
                 if (intensity > 1.0) intensity = (float)1.0;
                 if (intensity < 0.0) intensity = (float)0.0;
                 red = (int)(255 * intensity);
-                green = (int)(255 * intensity);
+                green = (int)(0 * intensity);
                 blue = (int)(255 * intensity);
 
                 uint color = ColorFromBytes((byte)blueCalculator.Update(blue), (byte)greenCalculator.Update((int)((float)green * 0.8)), (byte)redCalculator.Update(red));
-                Color textColor = Color.FromArgb((int) blueTextCalculator.Update(255 - blue), (int) greenTextCalculator.Update(255 - green), (int) redTextCalculator.Update(255 - red));
-
-                mBoardLights[0].Color = color;
-                mBoardLights[1].Color = color;
-                mBoardLights[2].Color = color;
-                mBoard.Apply();
+                //mBoardLights[0].Color = color;
+                //mBoardLights[1].Color = color;
+                //mBoardLights[2].Color = color;
+                //mBoard.Apply();
 
                 // Traverse all LEDs on DRAM sticks one and two
                 for (int i = 0; i < 8; i++)
