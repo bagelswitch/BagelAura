@@ -46,9 +46,9 @@ namespace BagelAura
             this.giphybox.DefaultBackgroundColor = System.Drawing.Color.Transparent;
             this.giphybox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.giphybox.Location = new System.Drawing.Point(0, 0);
-            this.giphybox.MinimumSize = new System.Drawing.Size(713, 200);
+            this.giphybox.MinimumSize = new System.Drawing.Size(713, 400);
             this.giphybox.Name = "giphybox";
-            this.giphybox.Size = new System.Drawing.Size(713, 200);
+            this.giphybox.Size = new System.Drawing.Size(713, 400);
             this.giphybox.TabIndex = 0;
             this.giphybox.TabStop = false;
             this.giphybox.ZoomFactor = 1D;
@@ -58,7 +58,7 @@ namespace BagelAura
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
-            this.ClientSize = new System.Drawing.Size(713, 200);
+            this.ClientSize = new System.Drawing.Size(713, 400);
             this.ControlBox = false;
             this.Controls.Add(this.giphybox);
             this.CornerStyle = AltUI.Forms.DarkForm.CornerPreference.Round;

@@ -52,10 +52,10 @@ namespace BagelAura
         {
             InitializeComponent();
 
-            this.Bounds = new Rectangle(10, 0, 713, 200);
+            this.Bounds = new Rectangle(10, 0, 713, 400);
             Point TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
             TopLeft.X = TopLeft.X + 10;
-            TopLeft.Y = TopLeft.Y + 2190;
+            TopLeft.Y = TopLeft.Y + 1990;
             this.Location = TopLeft;
 
             this.Visible = true;
@@ -105,7 +105,7 @@ namespace BagelAura
 
             //Console.WriteLine("Setting gif URL: " + this.gifUrl);
 
-            return "<html><body><div style=\"text-align: center;\"><img src=\"" + this.gifUrl + "\"></div></body></html>";
+            return "<html><body><div style=\"text-align: center;overflow: hidden;\"><img style=\"height: 100%;width: auto;\" src=\"" + this.gifUrl + "\"></div></body></html>";
         }
 
         private void FocusDisplay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
