@@ -31,6 +31,8 @@ namespace BagelAura
         {
             string html = RandomGif(this.query);
 
+            this.queryTerm.Text = this.query;
+
             //Console.WriteLine("giphybox html: " + html);
 
             try

@@ -36,6 +36,7 @@ namespace BagelAura
         private void InitializeComponent()
         {
             this.giphybox = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.queryTerm = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.giphybox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,6 +54,18 @@ namespace BagelAura
             this.giphybox.TabStop = false;
             this.giphybox.ZoomFactor = 1D;
             // 
+            // queryTerm
+            // 
+            this.queryTerm.AutoSize = true;
+            this.queryTerm.BackColor = System.Drawing.Color.Transparent;
+            this.queryTerm.Font = new System.Drawing.Font("Unispace", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.queryTerm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.queryTerm.Location = new System.Drawing.Point(13, 13);
+            this.queryTerm.Name = "queryTerm";
+            this.queryTerm.Size = new System.Drawing.Size(88, 29);
+            this.queryTerm.TabIndex = 1;
+            this.queryTerm.Text = "sloth";
+            // 
             // FocusDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -60,6 +73,7 @@ namespace BagelAura
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
             this.ClientSize = new System.Drawing.Size(713, 500);
             this.ControlBox = false;
+            this.Controls.Add(this.queryTerm);
             this.Controls.Add(this.giphybox);
             this.CornerStyle = AltUI.Forms.DarkForm.CornerPreference.Round;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -74,11 +88,13 @@ namespace BagelAura
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FocusDisplay_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.giphybox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private WebView2 giphybox;
+        private Label queryTerm;
     }
 }
