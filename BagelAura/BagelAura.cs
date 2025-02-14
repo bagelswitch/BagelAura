@@ -83,46 +83,53 @@ namespace BagelAura
 
         static int k = 1;
 
+        static Boolean controlLock = false;
+
         static void ObtainControl(Boolean reEnum = true)
         {
-            // Aquire control
-            sdk.ReleaseControl(0);
-            sdk.SwitchMode();
-
-            if (reEnum)
+            if (!controlLock)
             {
-                // enumerate all devices
-                IAuraSyncDeviceCollection devices = sdk.Enumerate(0);
+                controlLock = true;
+                // Aquire control
+                sdk.ReleaseControl(0);
+                sdk.SwitchMode();
 
-                // Traverse all devices
-                foreach (IAuraSyncDevice dev in devices)
+                if (reEnum)
                 {
-                    if (dev.Name.Equals("ENE_RGB_For_ASUS0"))
+                    // enumerate all devices
+                    IAuraSyncDeviceCollection devices = sdk.Enumerate(0);
+
+                    // Traverse all devices
+                    foreach (IAuraSyncDevice dev in devices)
                     {
-                        stickOne = dev;
-                        stickOneLights = stickOne.Lights.Cast<IAuraRgbLight>().ToList();
-                        stickOneLights.Reverse();
-                    }
-                    else if (dev.Name.Equals("ENE_RGB_For_ASUS1"))
-                    {
-                        stickTwo = dev;
-                        stickTwoLights = stickTwo.Lights.Cast<IAuraRgbLight>().ToList();
-                        stickTwoLights.Reverse();
-                    }
-                    else if (dev.Name.Equals("Mainboard_Master"))
-                    {
-                        mBoard = dev;
-                        mBoardLights = mBoard.Lights.Cast<IAuraRgbLight>().ToList();
-                        mBoardLights.Reverse();
+                        if (dev.Name.Equals("ENE_RGB_For_ASUS0"))
+                        {
+                            stickOne = dev;
+                            stickOneLights = stickOne.Lights.Cast<IAuraRgbLight>().ToList();
+                            stickOneLights.Reverse();
+                        }
+                        else if (dev.Name.Equals("ENE_RGB_For_ASUS1"))
+                        {
+                            stickTwo = dev;
+                            stickTwoLights = stickTwo.Lights.Cast<IAuraRgbLight>().ToList();
+                            stickTwoLights.Reverse();
+                        }
+                        else if (dev.Name.Equals("Mainboard_Master"))
+                        {
+                            mBoard = dev;
+                            mBoardLights = mBoard.Lights.Cast<IAuraRgbLight>().ToList();
+                            mBoardLights.Reverse();
+                        }
                     }
                 }
+
+                // force all background processes to Eco QoS
+                Process process = Process.GetCurrentProcess();
+                EnableEcoqos(process);
+
+                k = 2;
+                controlLock = false;
             }
-
-            // force all background processes to Eco QoS
-            Process process = Process.GetCurrentProcess();
-            EnableEcoqos(process);
-
-            k = 2;
         }
 
         static uint AdjustColorIntensity(uint color, float intensity)
@@ -241,7 +248,13 @@ namespace BagelAura
 
         private static void OnTimedFocusEvent(Object source, ElapsedEventArgs e)
         {
-            focusd.SetQuery(GetActiveWindowTitle());
+            String title = GetActiveWindowTitle();
+            if (title == null || title.Trim().Equals("")) title = "sloth";
+
+            var words = title.Split(' ');
+            var query = words.OrderByDescending(n => n.Length).First();
+
+            focusd.SetQuery(query);
         }
 
         [DllImport("user32.dll")]
@@ -276,90 +289,93 @@ namespace BagelAura
                     ObtainControl(false);
                 }
 
-                int instCpuLoad = (int)(cpu.NextValue() * 100);
-                int graphCpuLoad = graphCalculator.Update(instCpuLoad);
-
-                // Set LEDs on mboard i/o panel
-                int blue = 0;
-                int green = 0;
-                int red = 0;
-                float intensity = 0;
-
-                if (instCpuLoad > 8000)
+                if (!controlLock)
                 {
-                    intensity = (float)(instCpuLoad - 8000) / (float)2000;
+                    int instCpuLoad = (int)(cpu.NextValue() * 100);
+                    int graphCpuLoad = graphCalculator.Update(instCpuLoad);
+
+                    // Set LEDs on mboard i/o panel
+                    int blue = 0;
+                    int green = 0;
+                    int red = 0;
+                    float intensity = 0;
+
+                    if (instCpuLoad > 8000)
+                    {
+                        intensity = (float)(instCpuLoad - 8000) / (float)2000;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        blue = 0;
+                        red = 255;
+                        green = 255 - (int)(255 * intensity);
+                    }
+                    else if (instCpuLoad > 6000)
+                    {
+                        intensity = (float)(instCpuLoad - 6000) / (float)2000;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        blue = 0;
+                        red = (int)(255 * intensity);
+                        green = 255;
+                    }
+                    else if (instCpuLoad > 4000)
+                    {
+                        intensity = (float)(instCpuLoad - 4000) / (float)2000;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        red = 0;
+                        blue = 255 - (int)(255 * intensity);
+                        green = 255;
+                    }
+                    else if (instCpuLoad > 2000)
+                    {
+                        intensity = (float)(instCpuLoad - 2000) / (float)2000;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        red = 0;
+                        green = (int)(255 * intensity);
+                        blue = 255;
+                    }
+                    else
+                    {
+                        intensity = (float)(instCpuLoad) / (float)2000;
+                        if (intensity > 1.0) intensity = (float)1.0;
+                        if (intensity < 0.0) intensity = (float)0.0;
+                        red = 0;
+                        green = 0;
+                        blue = (int)(255 * intensity);
+                    }
+
+                    Color activecolor = Color.FromArgb((int)redGraphCalculator.Update(red), (int)greenGraphCalculator.Update(green), (int)blueGraphCalculator.Update(blue));
+
+                    intensity = (float)(instCpuLoad) / (float)8000;
                     if (intensity > 1.0) intensity = (float)1.0;
                     if (intensity < 0.0) intensity = (float)0.0;
-                    blue = 0;
-                    red = 255;
-                    green = 255 - (int)(255 * intensity);
-                }
-                else if (instCpuLoad > 6000)
-                {
-                    intensity = (float)(instCpuLoad - 6000) / (float)2000;
-                    if (intensity > 1.0) intensity = (float)1.0;
-                    if (intensity < 0.0) intensity = (float)0.0;
-                    blue = 0;
                     red = (int)(255 * intensity);
-                    green = 255;
-                }
-                else if (instCpuLoad > 4000)
-                {
-                    intensity = (float)(instCpuLoad - 4000) / (float)2000;
-                    if (intensity > 1.0) intensity = (float)1.0;
-                    if (intensity < 0.0) intensity = (float)0.0;
-                    red = 0;
-                    blue = 255 - (int)(255 * intensity);
-                    green = 255;
-                }
-                else if (instCpuLoad > 2000)
-                {
-                    intensity = (float)(instCpuLoad - 2000) / (float)2000;
-                    if (intensity > 1.0) intensity = (float)1.0;
-                    if (intensity < 0.0) intensity = (float)0.0;
-                    red = 0;
-                    green = (int)(255 * intensity);
-                    blue = 255;
-                }
-                else
-                {
-                    intensity = (float)(instCpuLoad) / (float)2000;
-                    if (intensity > 1.0) intensity = (float)1.0;
-                    if (intensity < 0.0) intensity = (float)0.0;
-                    red = 0;
-                    green = 0;
+                    green = (int)(0 * intensity);
                     blue = (int)(255 * intensity);
+
+                    uint color = ColorFromBytes((byte)blueCalculator.Update(blue), (byte)greenCalculator.Update((int)((float)green * 0.8)), (byte)redCalculator.Update(red));
+                    //mBoardLights[0].Color = color;
+                    //mBoardLights[1].Color = color;
+                    //mBoardLights[2].Color = color;
+                    //mBoard.Apply();
+
+                    // Traverse all LEDs on DRAM sticks one and two
+                    for (int i = 0; i < 8; i++)
+                    {
+                        stickOneLights[i].Color = color;
+                        stickTwoLights[i].Color = color;
+                    }
+                    stickOne.Apply();
+                    stickTwo.Apply();
+
+                    cpud.currentload = graphCpuLoad / 100;
+                    cpud.currentColor = activecolor;
+
+                    cpud.isDirty = true;
+                    cpud.Invalidate();
                 }
-
-                Color activecolor = Color.FromArgb((int)redGraphCalculator.Update(red), (int)greenGraphCalculator.Update(green), (int)blueGraphCalculator.Update(blue));
-
-                intensity = (float)(instCpuLoad) / (float) 8000;
-                if (intensity > 1.0) intensity = (float)1.0;
-                if (intensity < 0.0) intensity = (float)0.0;
-                red = (int)(255 * intensity);
-                green = (int)(0 * intensity);
-                blue = (int)(255 * intensity);
-
-                uint color = ColorFromBytes((byte)blueCalculator.Update(blue), (byte)greenCalculator.Update((int)((float)green * 0.8)), (byte)redCalculator.Update(red));
-                //mBoardLights[0].Color = color;
-                //mBoardLights[1].Color = color;
-                //mBoardLights[2].Color = color;
-                //mBoard.Apply();
-
-                // Traverse all LEDs on DRAM sticks one and two
-                for (int i = 0; i < 8; i++)
-                {
-                    stickOneLights[i].Color = color;
-                    stickTwoLights[i].Color = color;
-                }
-                stickOne.Apply();
-                stickTwo.Apply();
-
-                cpud.currentload = graphCpuLoad / 100;
-                cpud.currentColor = activecolor;
-
-                cpud.isDirty= true;
-                cpud.Invalidate();
             }
             k++;
         }
