@@ -32,6 +32,8 @@ namespace BagelAura
             string html = RandomGif(this.query);
 
             this.queryTerm.Text = this.query;
+            this.Invalidate();
+            this.Update();
 
             //Console.WriteLine("giphybox html: " + html);
 
