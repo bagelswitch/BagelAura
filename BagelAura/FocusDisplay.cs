@@ -52,10 +52,10 @@ namespace BagelAura
         {
             InitializeComponent();
 
-            this.Bounds = new Rectangle(10, 0, 713, 400);
+            this.Bounds = new Rectangle(10, 0, 713, 500);
             Point TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
             TopLeft.X = TopLeft.X + 10;
-            TopLeft.Y = TopLeft.Y + 1990;
+            TopLeft.Y = TopLeft.Y + 1890;
             this.Location = TopLeft;
 
             this.Visible = true;
@@ -96,12 +96,13 @@ namespace BagelAura
             var searchParameter = new SearchParameter()
             {
                 Query = query,
-                Limit = 1
+                Limit = 10
             };
             var task = giphy.GifSearch(searchParameter);
             var gifResult = task.GetAwaiter().GetResult();
 
-            this.gifUrl = gifResult.Data[0].Images.FixedHeight.Webp;
+            int selector = new Random().Next(0, gifResult.Data.Length);
+            this.gifUrl = gifResult.Data[selector].Images.FixedHeight.Webp;
 
             //Console.WriteLine("Setting gif URL: " + this.gifUrl);
 
