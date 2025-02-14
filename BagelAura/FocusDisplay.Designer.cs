@@ -44,7 +44,8 @@ namespace BagelAura
             // 
             this.giphybox.AllowExternalDrop = false;
             this.giphybox.CreationProperties = null;
-            this.giphybox.DefaultBackgroundColor = System.Drawing.Color.Transparent;
+            this.giphybox.DefaultBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
+            this.giphybox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
             this.giphybox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.giphybox.Location = new System.Drawing.Point(0, 0);
             this.giphybox.MinimumSize = new System.Drawing.Size(713, 500);
