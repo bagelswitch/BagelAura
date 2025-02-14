@@ -95,7 +95,7 @@ namespace BagelAura
             this.DiskD.BackColor = System.Drawing.Color.Transparent;
             this.DiskD.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.DiskD.ForeColor = Color.Yellow;
-            this.DiskD.Location = new System.Drawing.Point(45, 5);
+            this.DiskD.Location = new System.Drawing.Point(55, 5);
             this.DiskD.Name = "DiskD";
             this.DiskD.Size = new System.Drawing.Size(30, 30);
             this.DiskD.TabIndex = 1;
@@ -108,7 +108,7 @@ namespace BagelAura
             this.DiskE.BackColor = System.Drawing.Color.Transparent;
             this.DiskE.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.DiskE.ForeColor = Color.Yellow;
-            this.DiskE.Location = new System.Drawing.Point(85, 5);
+            this.DiskE.Location = new System.Drawing.Point(105, 5);
             this.DiskE.Name = "DiskE";
             this.DiskE.Size = new System.Drawing.Size(30, 30);
             this.DiskE.TabIndex = 1;
@@ -121,7 +121,7 @@ namespace BagelAura
             this.DiskF.BackColor = System.Drawing.Color.Transparent;
             this.DiskF.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.DiskF.ForeColor = Color.LightGreen;
-            this.DiskF.Location = new System.Drawing.Point(125, 5);
+            this.DiskF.Location = new System.Drawing.Point(155, 5);
             this.DiskF.Name = "DiskF";
             this.DiskF.Size = new System.Drawing.Size(30, 30);
             this.DiskF.TabIndex = 1;
@@ -134,7 +134,7 @@ namespace BagelAura
             this.DiskW.BackColor = System.Drawing.Color.Transparent;
             this.DiskW.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.DiskW.ForeColor = Color.LightGreen;
-            this.DiskW.Location = new System.Drawing.Point(165, 5);
+            this.DiskW.Location = new System.Drawing.Point(205, 5);
             this.DiskW.Name = "DiskW";
             this.DiskW.Size = new System.Drawing.Size(30, 30);
             this.DiskW.TabIndex = 1;
@@ -147,7 +147,7 @@ namespace BagelAura
             this.Network.BackColor = System.Drawing.Color.Transparent;
             this.Network.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Network.ForeColor = Color.LightGreen;
-            this.Network.Location = new System.Drawing.Point(960, 5);
+            this.Network.Location = new System.Drawing.Point(1100, 5);
             this.Network.Name = "Network";
             this.Network.Size = new System.Drawing.Size(30, 30);
             this.Network.TabIndex = 1;

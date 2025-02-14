@@ -10,6 +10,9 @@ using System.Windows.Forms;
 using System.Timers;
 
 using static Vanara.PInvoke.Kernel32;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace BagelAura
 {
@@ -33,6 +36,7 @@ namespace BagelAura
 
         private static System.Timers.Timer cpuTimer;
         private static System.Timers.Timer diskTimer;
+        private static System.Timers.Timer focusTimer;
 
 
         static PerformanceCounter cpu = new PerformanceCounter
@@ -74,6 +78,8 @@ namespace BagelAura
 
         // attempt to draw rectangles directly to screen
         static CPUDisplay cpud = new CPUDisplay();
+
+        static FocusDisplay focusd = new FocusDisplay();
 
         static int k = 1;
 
@@ -197,6 +203,7 @@ namespace BagelAura
         {
             cpuTimer = new System.Timers.Timer(90);
             diskTimer = new System.Timers.Timer(240);
+            focusTimer = new System.Timers.Timer(4500);
 
             cpuTimer.Elapsed += OnTimedCPUEvent;
             cpuTimer.AutoReset = true;
@@ -205,8 +212,13 @@ namespace BagelAura
             diskTimer.Elapsed += OnTimedDiskEvent;
             diskTimer.AutoReset = true;
             diskTimer.Enabled = true;
+
+            focusTimer.Elapsed += OnTimedFocusEvent;
+            focusTimer.AutoReset = true;
+            focusTimer.Enabled = true;
         }
 
+        [STAThread]
         static void Main(string[] args)
         {
             Process process = Process.GetCurrentProcess();
@@ -222,6 +234,33 @@ namespace BagelAura
 
             diskTimer.Stop();
             diskTimer.Dispose();
+
+            focusTimer.Stop();
+            focusTimer.Dispose();
+        }
+
+        private static void OnTimedFocusEvent(Object source, ElapsedEventArgs e)
+        {
+            focusd.SetQuery(GetActiveWindowTitle());
+        }
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
+        private static string GetActiveWindowTitle()
+        {
+            const int nChars = 256;
+            StringBuilder Buff = new StringBuilder(nChars);
+            IntPtr handle = GetForegroundWindow();
+
+            if (GetWindowText(handle, Buff, nChars) > 0)
+            {
+                return Buff.ToString();
+            }
+            return null;
         }
 
         private static void OnTimedCPUEvent(Object source, ElapsedEventArgs e)

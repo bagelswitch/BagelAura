@@ -82,7 +82,7 @@ namespace BagelAura
             InitializeComponent();
 
             this.Bounds = new Rectangle(10, 0, graphWidth, graphHeight);
-            Point TopLeft = System.Windows.Forms.Screen.AllScreens[1].WorkingArea.Location;
+            Point TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
             TopLeft.X = TopLeft.X + 10;
             TopLeft.Y = TopLeft.Y + 2400;
             this.Location = TopLeft;
