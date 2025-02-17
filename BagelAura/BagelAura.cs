@@ -251,7 +251,7 @@ namespace BagelAura
             String title = GetActiveWindowTitle();
             if (title == null || title.Trim().Equals("")) title = "sloth";
 
-            var words = title.Split(new char[] { ' ', '.', '/', ':', ';', '-', '\\', '+', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+            var words = title.Split(new char[] { ' ', ',', '.', '/', ':', ';', '-', '\\', '+', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
             var query = words.OrderByDescending(n => n.Length).First();
 
             focusd.SetQuery(query);
