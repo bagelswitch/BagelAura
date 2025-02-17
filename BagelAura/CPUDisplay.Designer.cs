@@ -51,27 +51,27 @@ namespace BagelAura
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CPUPct.AutoSize = true;
             this.CPUPct.BackColor = System.Drawing.Color.Transparent;
-            this.CPUPct.Font = new System.Drawing.Font("Quartz MS", 40F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.CPUPct.Font = new System.Drawing.Font("Quartz MS", 20F);
             this.CPUPct.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.CPUPct.Location = new System.Drawing.Point(338, 224);
+            this.CPUPct.Location = new System.Drawing.Point(331, 75);
             this.CPUPct.Name = "CPUPct";
-            this.CPUPct.Size = new System.Drawing.Size(206, 96);
+            this.CPUPct.Size = new System.Drawing.Size(100, 50);
             this.CPUPct.TabIndex = 0;
             this.CPUPct.Text = "00%";
             this.CPUPct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CPUMax
             // 
-            this.CPUMax.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.CPUMax.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CPUMax.AutoSize = true;
             this.CPUMax.BackColor = System.Drawing.Color.Transparent;
-            this.CPUMax.Font = new System.Drawing.Font("Quartz MS", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.CPUMax.ForeColor = Color.Gray;
-            this.CPUMax.Location = new System.Drawing.Point(300, 200);
+            this.CPUMax.Font = new System.Drawing.Font("Quartz MS", 12F);
+            this.CPUMax.ForeColor = System.Drawing.Color.Gray;
+            this.CPUMax.Location = new System.Drawing.Point(270, 25);
             this.CPUMax.Name = "CPUMax";
-            this.CPUMax.Size = new System.Drawing.Size(100, 50);
+            this.CPUMax.Size = new System.Drawing.Size(50, 25);
             this.CPUMax.TabIndex = 0;
             this.CPUMax.Text = "00%";
             this.CPUMax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -80,11 +80,11 @@ namespace BagelAura
             // 
             this.DiskC.AutoSize = true;
             this.DiskC.BackColor = System.Drawing.Color.Transparent;
-            this.DiskC.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.DiskC.ForeColor = Color.LightGreen;
-            this.DiskC.Location = new System.Drawing.Point(5, 5);
+            this.DiskC.Font = new System.Drawing.Font("Segoe Keycaps", 10F, System.Drawing.FontStyle.Bold);
+            this.DiskC.ForeColor = System.Drawing.Color.LightGreen;
+            this.DiskC.Location = new System.Drawing.Point(3, 3);
             this.DiskC.Name = "DiskC";
-            this.DiskC.Size = new System.Drawing.Size(30, 30);
+            this.DiskC.Size = new System.Drawing.Size(54, 35);
             this.DiskC.TabIndex = 1;
             this.DiskC.Text = "C";
             this.DiskC.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -93,11 +93,11 @@ namespace BagelAura
             // 
             this.DiskD.AutoSize = true;
             this.DiskD.BackColor = System.Drawing.Color.Transparent;
-            this.DiskD.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.DiskD.ForeColor = Color.Yellow;
-            this.DiskD.Location = new System.Drawing.Point(55, 5);
+            this.DiskD.Font = new System.Drawing.Font("Segoe Keycaps", 10F, System.Drawing.FontStyle.Bold);
+            this.DiskD.ForeColor = System.Drawing.Color.Yellow;
+            this.DiskD.Location = new System.Drawing.Point(33, 3);
             this.DiskD.Name = "DiskD";
-            this.DiskD.Size = new System.Drawing.Size(30, 30);
+            this.DiskD.Size = new System.Drawing.Size(54, 35);
             this.DiskD.TabIndex = 1;
             this.DiskD.Text = "D";
             this.DiskD.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -106,11 +106,11 @@ namespace BagelAura
             // 
             this.DiskE.AutoSize = true;
             this.DiskE.BackColor = System.Drawing.Color.Transparent;
-            this.DiskE.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.DiskE.ForeColor = Color.Yellow;
-            this.DiskE.Location = new System.Drawing.Point(105, 5);
+            this.DiskE.Font = new System.Drawing.Font("Segoe Keycaps", 10F, System.Drawing.FontStyle.Bold);
+            this.DiskE.ForeColor = System.Drawing.Color.Yellow;
+            this.DiskE.Location = new System.Drawing.Point(63, 3);
             this.DiskE.Name = "DiskE";
-            this.DiskE.Size = new System.Drawing.Size(30, 30);
+            this.DiskE.Size = new System.Drawing.Size(54, 35);
             this.DiskE.TabIndex = 1;
             this.DiskE.Text = "E";
             this.DiskE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -119,11 +119,11 @@ namespace BagelAura
             // 
             this.DiskF.AutoSize = true;
             this.DiskF.BackColor = System.Drawing.Color.Transparent;
-            this.DiskF.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.DiskF.ForeColor = Color.LightGreen;
-            this.DiskF.Location = new System.Drawing.Point(155, 5);
+            this.DiskF.Font = new System.Drawing.Font("Segoe Keycaps", 10F, System.Drawing.FontStyle.Bold);
+            this.DiskF.ForeColor = System.Drawing.Color.LightGreen;
+            this.DiskF.Location = new System.Drawing.Point(93, 3);
             this.DiskF.Name = "DiskF";
-            this.DiskF.Size = new System.Drawing.Size(30, 30);
+            this.DiskF.Size = new System.Drawing.Size(54, 35);
             this.DiskF.TabIndex = 1;
             this.DiskF.Text = "F";
             this.DiskF.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -132,11 +132,11 @@ namespace BagelAura
             // 
             this.DiskW.AutoSize = true;
             this.DiskW.BackColor = System.Drawing.Color.Transparent;
-            this.DiskW.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.DiskW.ForeColor = Color.LightGreen;
-            this.DiskW.Location = new System.Drawing.Point(205, 5);
+            this.DiskW.Font = new System.Drawing.Font("Segoe Keycaps", 10F, System.Drawing.FontStyle.Bold);
+            this.DiskW.ForeColor = System.Drawing.Color.LightGreen;
+            this.DiskW.Location = new System.Drawing.Point(123, 3);
             this.DiskW.Name = "DiskW";
-            this.DiskW.Size = new System.Drawing.Size(30, 30);
+            this.DiskW.Size = new System.Drawing.Size(54, 35);
             this.DiskW.TabIndex = 1;
             this.DiskW.Text = "W";
             this.DiskW.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -145,21 +145,20 @@ namespace BagelAura
             // 
             this.Network.AutoSize = true;
             this.Network.BackColor = System.Drawing.Color.Transparent;
-            this.Network.Font = new System.Drawing.Font("Segoe Keycaps", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.Network.ForeColor = Color.LightGreen;
-            this.Network.Location = new System.Drawing.Point(1100, 5);
+            this.Network.Font = new System.Drawing.Font("Segoe Keycaps", 10F, System.Drawing.FontStyle.Bold);
+            this.Network.ForeColor = System.Drawing.Color.LightGreen;
+            this.Network.Location = new System.Drawing.Point(610, 3);
             this.Network.Name = "Network";
-            this.Network.Size = new System.Drawing.Size(30, 30);
+            this.Network.Size = new System.Drawing.Size(54, 35);
             this.Network.TabIndex = 1;
             this.Network.Text = "N";
             this.Network.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CPUDisplay
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
-            this.ClientSize = new System.Drawing.Size(889, 562);
+            this.ClientSize = new System.Drawing.Size(662, 150);
             this.ControlBox = false;
             this.Controls.Add(this.DiskC);
             this.Controls.Add(this.DiskD);
@@ -171,7 +170,6 @@ namespace BagelAura
             this.Controls.Add(this.CPUMax);
             this.CornerStyle = AltUI.Forms.DarkForm.CornerPreference.Round;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CPUDisplay";

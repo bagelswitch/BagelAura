@@ -16,7 +16,7 @@ namespace BagelAura
     {
         public bool isDirty = false;
 
-        private int graphWidth = 713;
+        private int graphWidth = 662;
         private int graphHeight = 150;
 
         public Color currentColor = Color.Black;
@@ -24,8 +24,8 @@ namespace BagelAura
 
         static SimpleMovingAverage lineCalculator = new SimpleMovingAverage(k: 20);
 
-        public Point[] graphPoints = new Point[71];
-        public Color[] graphColors = new Color[71];
+        public Point[] graphPoints = new Point[66];
+        public Color[] graphColors = new Color[66];
 
         private int segmentWidth;
 
@@ -83,9 +83,11 @@ namespace BagelAura
 
             this.Bounds = new Rectangle(10, 0, graphWidth, graphHeight);
             Point TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
-            TopLeft.X = TopLeft.X + 10;
+            TopLeft.X = TopLeft.X + 350;
             TopLeft.Y = TopLeft.Y + 2400;
             this.Location = TopLeft;
+            this.Top = TopLeft.Y;
+            this.Left = TopLeft.X;
 
             this.CPUPct.Location = new System.Drawing.Point(
                                             (this.Width / 2) - (this.CPUPct.Width / 2),
@@ -93,7 +95,7 @@ namespace BagelAura
 
             this.CPUMax.Location = new System.Drawing.Point(
                                 this.CPUPct.Right + 20,
-                                this.CPUPct.Top - 20 );
+                                this.CPUPct.Top - 30 );
 
             segmentWidth = graphWidth / graphPoints.Length;
 

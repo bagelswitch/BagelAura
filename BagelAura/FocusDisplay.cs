@@ -56,11 +56,13 @@ namespace BagelAura
         {
             InitializeComponent();
 
-            this.Bounds = new Rectangle(10, 0, 713, 500);
+            this.Bounds = new Rectangle(10, 0, 662, 500);
             Point TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
-            TopLeft.X = TopLeft.X + 10;
+            TopLeft.X = TopLeft.X + 350;
             TopLeft.Y = TopLeft.Y + 1890;
             this.Location = TopLeft;
+            this.Top = TopLeft.Y;
+            this.Left = TopLeft.X;
 
             this.Visible = true;
             this.giphybox.Visible = true;

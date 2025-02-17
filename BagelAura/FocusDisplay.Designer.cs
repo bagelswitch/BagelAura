@@ -43,14 +43,14 @@ namespace BagelAura
             // giphybox
             // 
             this.giphybox.AllowExternalDrop = false;
+            this.giphybox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
             this.giphybox.CreationProperties = null;
             this.giphybox.DefaultBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
-            this.giphybox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
             this.giphybox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.giphybox.Location = new System.Drawing.Point(0, 0);
-            this.giphybox.MinimumSize = new System.Drawing.Size(713, 500);
+            this.giphybox.MinimumSize = new System.Drawing.Size(662, 500);
             this.giphybox.Name = "giphybox";
-            this.giphybox.Size = new System.Drawing.Size(713, 500);
+            this.giphybox.Size = new System.Drawing.Size(662, 500);
             this.giphybox.TabIndex = 0;
             this.giphybox.TabStop = false;
             this.giphybox.ZoomFactor = 1D;
@@ -69,10 +69,9 @@ namespace BagelAura
             // 
             // FocusDisplay
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
-            this.ClientSize = new System.Drawing.Size(713, 500);
+            this.ClientSize = new System.Drawing.Size(662, 500);
             this.ControlBox = false;
             this.Controls.Add(this.queryTerm);
             this.Controls.Add(this.giphybox);

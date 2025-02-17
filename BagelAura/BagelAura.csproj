@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
+	<ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
