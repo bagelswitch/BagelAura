@@ -20,7 +20,7 @@ namespace BagelAura
     {
         static Boolean active = true;
 
-        static String[] others = { "HYTE.Nexus.Service", "HYTE Nexus", "wallpaper32", "AsusCertService", "asus_framework", 
+        static String[] others = { "HYTE.Nexus.Service", "wallpaper32", "AsusCertService", "asus_framework", 
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service" };
 
         // Create SDK instance
@@ -251,7 +251,7 @@ namespace BagelAura
             String title = GetActiveWindowTitle();
             if (title == null || title.Trim().Equals("")) title = "sloth";
 
-            var words = title.Split(new char[] { ' ', ',', '.', '/', ':', ';', '-', '\\', '+', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+            var words = title.Split(new char[] { ' ', ',', '.', '/', '|', ':', ';', '-', '\\', '+', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
             var query = words.OrderByDescending(n => n.Length).First();
 
             focusd.SetQuery(query);
