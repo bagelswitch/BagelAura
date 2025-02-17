@@ -109,7 +109,7 @@ namespace BagelAura
             var searchParameter = new SearchParameter()
             {
                 Query = query,
-                Limit = 10
+                Limit = 50
             };
             var task = giphy.GifSearch(searchParameter);
             var gifResult = task.GetAwaiter().GetResult();
