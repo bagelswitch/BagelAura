@@ -57,7 +57,7 @@ namespace BagelAura
             InitializeComponent();
 
             this.Bounds = new Rectangle(10, 0, 662, 500);
-            Point TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
+            Point TopLeft = System.Windows.Forms.Screen.AllScreens[1].WorkingArea.Location;
             TopLeft.X = TopLeft.X + 350;
             TopLeft.Y = TopLeft.Y + 1890;
             this.Location = TopLeft;
