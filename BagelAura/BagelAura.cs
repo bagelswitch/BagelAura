@@ -20,7 +20,7 @@ namespace BagelAura
     {
         static Boolean active = true;
 
-        static String[] others = { "HYTE.Nexus.Service", "wallpaper32", "AsusCertService", "asus_framework", 
+        static String[] others = { "wallpaper32", "AsusCertService", "asus_framework", 
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service" };
 
         // Create SDK instance
