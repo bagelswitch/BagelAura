@@ -43,7 +43,8 @@ namespace BagelAura
                 {
                     this.giphybox.NavigateToString(html);
                 }));
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
@@ -119,7 +120,7 @@ namespace BagelAura
 
             //Console.WriteLine("Setting gif URL: " + this.gifUrl);
 
-            return "<html><body><div style=\"text-align: center;overflow: hidden;\"><img style=\"height: 100%;width: auto;\" src=\"" + this.gifUrl + "\"></div></body></html>";
+            return "<html><body><div style=\"width: 100%;height: 100%;overflow: hidden;\"><img style=\"position: relative;top: 50%;left: 50%;transform: translate(-50%, -50%);height: 100%;width: auto;\" src=\"" + this.gifUrl + "\"></div></body></html>";
         }
 
         private void FocusDisplay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
