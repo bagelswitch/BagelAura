@@ -106,6 +106,11 @@ namespace BagelAura
 
         private string RandomGif(string query)
         {
+            if(query.Equals("Google"))
+            {
+                query = "google it";
+            }
+
             var giphy = new Giphy("pbqC94PZJPMP3qLR4eYsCiwSBkPLo6m8");
             var searchParameter = new SearchParameter()
             {
