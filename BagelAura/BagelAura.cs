@@ -85,6 +85,8 @@ namespace BagelAura
 
         static Boolean controlLock = false;
 
+        static string giphyKey = "";
+
         static void ObtainControl(Boolean reEnum = true)
         {
             if (!controlLock)
@@ -197,9 +199,16 @@ namespace BagelAura
                 active = false;
                 cpuTimer.Stop();
                 diskTimer.Stop();
+                focusTimer.Stop();
                 sdk.ReleaseControl(0);
             } else if (e.Mode == PowerModes.Resume)
             {
+                cpud.Dispose();
+                cpud = new CPUDisplay();
+                focusd.Dispose();
+                focusd = new FocusDisplay();
+                focusd.SetGiphyKey(giphyKey);
+
                 k = 1;
                 active = true;
                 SetTimers();
@@ -228,7 +237,8 @@ namespace BagelAura
         [STAThread]
         static void Main(string[] args)
         {
-            focusd.SetGiphyKey(args[0]);
+            giphyKey = args[0];
+            focusd.SetGiphyKey(giphyKey);
 
             Process process = Process.GetCurrentProcess();
             process.Exited += new EventHandler(OnExit);
