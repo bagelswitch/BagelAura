@@ -59,16 +59,15 @@ namespace BagelAura
             //Console.WriteLine("giphybox html updated");
         }
 
-        public FocusDisplay()
+        public void InitializeLocation()
         {
-            InitializeComponent();
-
             this.Bounds = new Rectangle(10, 0, 662, 500);
-            Point TopLeft = new Point(0,0);
+            Point TopLeft = new Point(0, 0);
             if (System.Windows.Forms.Screen.AllScreens[0].Primary)
             {
                 TopLeft = System.Windows.Forms.Screen.AllScreens[1].WorkingArea.Location;
-            } else
+            }
+            else
             {
                 TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
             }
@@ -80,6 +79,13 @@ namespace BagelAura
 
             this.Visible = true;
             this.giphybox.Visible = true;
+        }
+
+        public FocusDisplay()
+        {
+            InitializeComponent();
+
+            InitializeLocation();
 
             this.SetStyle(
                             System.Windows.Forms.ControlStyles.UserPaint |

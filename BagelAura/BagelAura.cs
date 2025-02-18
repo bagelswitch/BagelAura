@@ -203,11 +203,8 @@ namespace BagelAura
                 sdk.ReleaseControl(0);
             } else if (e.Mode == PowerModes.Resume)
             {
-                cpud.Dispose();
-                cpud = new CPUDisplay();
-                focusd.Dispose();
-                focusd = new FocusDisplay();
-                focusd.SetGiphyKey(giphyKey);
+                cpud.InitializeLocation();
+                focusd.InitializeLocation();
 
                 k = 1;
                 active = true;

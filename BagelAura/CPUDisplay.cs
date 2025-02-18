@@ -77,10 +77,8 @@ namespace BagelAura
             }
         }
 
-        public CPUDisplay()
+        public void InitializeLocation()
         {
-            InitializeComponent();
-
             this.Bounds = new Rectangle(10, 0, graphWidth, graphHeight);
             Point TopLeft = new Point(0, 0);
             if (System.Windows.Forms.Screen.AllScreens[0].Primary)
@@ -103,7 +101,7 @@ namespace BagelAura
 
             this.CPUMax.Location = new System.Drawing.Point(
                                 this.CPUPct.Right + 20,
-                                this.CPUPct.Top - 30 );
+                                this.CPUPct.Top - 30);
 
             segmentWidth = graphWidth / graphPoints.Length;
 
@@ -116,6 +114,13 @@ namespace BagelAura
             this.DiskF.Visible = true;
             this.DiskW.Visible = true;
             this.Network.Visible = true;
+        }
+
+        public CPUDisplay()
+        {
+            InitializeComponent();
+
+            InitializeLocation();
 
             this.SetStyle(
                             System.Windows.Forms.ControlStyles.UserPaint |
