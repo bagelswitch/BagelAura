@@ -17,6 +17,12 @@ namespace BagelAura
 
         private string query = "sloth";
         private string gifUrl = "";
+        private string giphyKey = "";
+
+        public void SetGiphyKey(string key)
+        {
+            this.giphyKey = key;
+        }
 
         private void SetTimers()
         {
@@ -111,7 +117,7 @@ namespace BagelAura
                 query = "google it";
             }
 
-            var giphy = new Giphy("pbqC94PZJPMP3qLR4eYsCiwSBkPLo6m8");
+            var giphy = new Giphy(this.giphyKey);
             var searchParameter = new SearchParameter()
             {
                 Query = query,

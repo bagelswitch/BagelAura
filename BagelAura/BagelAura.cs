@@ -228,6 +228,8 @@ namespace BagelAura
         [STAThread]
         static void Main(string[] args)
         {
+            focusd.SetGiphyKey(args[0]);
+
             Process process = Process.GetCurrentProcess();
             process.Exited += new EventHandler(OnExit);
             SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(OnPowerModeChanged);
