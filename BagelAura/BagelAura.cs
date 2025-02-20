@@ -12,7 +12,6 @@ using System.Timers;
 using static Vanara.PInvoke.Kernel32;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Runtime.CompilerServices;
 
 namespace BagelAura
 {
@@ -194,18 +193,19 @@ namespace BagelAura
 
         static void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
-            if(e.Mode == PowerModes.Suspend)
+            var mode = e.Mode;
+
+            //Console.WriteLine("OLD OnPowerModeChanged! Mode: " + mode.ToString());
+
+            if(mode == PowerModes.Suspend)
             {
                 active = false;
                 cpuTimer.Stop();
                 diskTimer.Stop();
                 focusTimer.Stop();
                 sdk.ReleaseControl(0);
-            } else if (e.Mode == PowerModes.Resume)
+            } else if (mode == PowerModes.Resume)
             {
-                cpud.InitializeLocation();
-                focusd.InitializeLocation();
-
                 k = 1;
                 active = true;
                 SetTimers();

@@ -61,6 +61,8 @@ namespace BagelAura
 
         public void InitializeLocation()
         {
+            InitializeComponent();
+
             this.Bounds = new Rectangle(10, 0, 662, 500);
             Point TopLeft = new Point(0, 0);
             if (System.Windows.Forms.Screen.AllScreens[0].Primary)
@@ -79,18 +81,16 @@ namespace BagelAura
 
             this.Visible = true;
             this.giphybox.Visible = true;
+
+            this.SetStyle(
+                System.Windows.Forms.ControlStyles.UserPaint |
+                System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
+                System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         public FocusDisplay()
         {
-            InitializeComponent();
-
             InitializeLocation();
-
-            this.SetStyle(
-                            System.Windows.Forms.ControlStyles.UserPaint |
-                            System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
-                            System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer, true);
 
             this.giphybox.CoreWebView2InitializationCompleted += giphybox_CoreWebView2InitializationCompleted;
 
