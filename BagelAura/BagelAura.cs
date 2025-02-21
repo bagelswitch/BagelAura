@@ -12,6 +12,7 @@ using System.Timers;
 using static Vanara.PInvoke.Kernel32;
 using System.Runtime.InteropServices;
 using System.Text;
+using Vanara.PInvoke;
 
 namespace BagelAura
 {
@@ -234,6 +235,11 @@ namespace BagelAura
         [STAThread]
         static void Main(string[] args)
         {
+            if (System.Windows.Forms.Screen.AllScreens[0].Primary)
+            {
+                currentDisplay = 1;
+            }
+
             giphyKey = args[0];
             focusd.SetGiphyKey(giphyKey);
 
