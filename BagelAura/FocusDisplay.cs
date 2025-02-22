@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using AltUI.Forms;
-using GiphyDotNet.Manager;
-using GiphyDotNet.Model.Parameters;
 using System.Timers;
 using System.Windows.Forms;
-using System.Drawing.Printing;
-using Vanara.InteropServices;
-using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net;
+using System.Text.Json.Nodes;
 
 namespace BagelAura
 {
@@ -97,6 +95,17 @@ namespace BagelAura
             this.giphybox.EnsureCoreWebView2Async();
             this.giphybox.Visible = true;
 
+            var handler = new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.GZip
+            };
+
+            restClient = new(handler)
+            {
+                BaseAddress = new Uri("https://tenor.googleapis.com/v2/search"),
+                Timeout = TimeSpan.FromSeconds(10),
+            };
+
             SetTimers();
         }
 
@@ -106,36 +115,47 @@ namespace BagelAura
             {
                 Console.WriteLine("CoreWebView2 initialization failed: " + e.InitializationException.ToString());
             }
-            //Console.WriteLine("giphybox init completed");
         }
 
         public void SetQuery(string query)
         {
             this.query = query;
+        }
 
-            //Console.WriteLine("Set active window title: " + query);
+        private static HttpClient restClient;
+
+        private string TenorGet(string query)
+        {
+            string queryString = "?q=" + query + "&random=false&limit=50&pos=0&ar_range=all&contentfilter=off&locale=en_US&key=" + this.giphyKey +"&client_key=bagelaura";
+            var task = restClient.GetAsync(queryString);
+            using HttpResponseMessage response = task.GetAwaiter().GetResult();
+            response.EnsureSuccessStatusCode();
+
+            HttpStatusCode responseCode = response.StatusCode;
+
+            byte[] responseBytes = response.Content.ReadAsByteArrayAsync().Result;
+
+            var responseJSON = JsonNode.Parse(responseBytes);
+            var resultArray = responseJSON["results"].AsArray();
+            int selector = new Random().Next(0, resultArray.Count);
+
+            return (string) resultArray[selector].AsObject()["media_formats"].AsObject()["gif"].AsObject()["url"];
         }
 
         private string RandomGif(string query)
         {
-            if(query.Equals("Google"))
+            if (query.Equals("Google"))
             {
                 query = "google it";
             }
 
-            var giphy = new Giphy(this.giphyKey);
-            var searchParameter = new SearchParameter()
+            try
             {
-                Query = query,
-                Limit = 50
-            };
-            var task = giphy.GifSearch(searchParameter);
-            var gifResult = task.GetAwaiter().GetResult();
-
-            int selector = new Random().Next(0, gifResult.Data.Length);
-            this.gifUrl = gifResult.Data[selector].Images.FixedHeight.Webp;
-
-            //Console.WriteLine("Setting gif URL: " + this.gifUrl);
+                this.gifUrl = TenorGet(query);
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
 
             return "<html><body><div style=\"width: 100%;height: 100%;overflow: hidden;\"><img style=\"position: relative;top: 50%;left: 50%;transform: translate(-50%, -50%);height: 100%;width: auto;\" src=\"" + this.gifUrl + "\"></div></body></html>";
         }

@@ -85,10 +85,12 @@ namespace BagelAura
             Point TopLeft = new Point(0, 0);
             if (System.Windows.Forms.Screen.AllScreens[0].Primary)
             {
+                //Console.WriteLine("CPUDisplay: Using screen 1");
                 TopLeft = System.Windows.Forms.Screen.AllScreens[1].WorkingArea.Location;
             }
             else
             {
+                //Console.WriteLine("CPUDisplay: Using screen 0");
                 TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
             }
             TopLeft.X = TopLeft.X + 350;
@@ -96,6 +98,8 @@ namespace BagelAura
             this.Location = TopLeft;
             this.Top = TopLeft.Y;
             this.Left = TopLeft.X;
+
+            //Console.WriteLine("CPUDisplay: Using origin:  X: " + this.Left + "  Y: " + this.Top);
 
             this.CPUPct.Location = new System.Drawing.Point(
                                             (this.Width / 2) - (this.CPUPct.Width / 2),
