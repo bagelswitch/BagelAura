@@ -20,8 +20,6 @@ namespace BagelAura
     {
         static Boolean active = true;
 
-        static int currentDisplay = 0;
-
         static String[] others = { "HYTE.Nexus.Service", "HYTE Nexus", "wallpaper32", "AsusCertService", "asus_framework", 
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2" };
 
@@ -235,11 +233,6 @@ namespace BagelAura
         [STAThread]
         static void Main(string[] args)
         {
-            if (System.Windows.Forms.Screen.AllScreens[0].Primary)
-            {
-                currentDisplay = 1;
-            }
-
             giphyKey = args[0];
             focusd.SetGiphyKey(giphyKey);
 
@@ -263,18 +256,6 @@ namespace BagelAura
 
         private static void OnTimedFocusEvent(Object source, ElapsedEventArgs e)
         {
-            int display = 0;
-            if(System.Windows.Forms.Screen.AllScreens[0].Primary)
-            {
-                display = 1;
-            }
-            if (display != currentDisplay)
-            {
-                cpud.InitializeLocation();
-                focusd.InitializeLocation();
-                currentDisplay = display;
-            }
-
             String title = GetActiveWindowTitle();
             if (title == null || title.Trim().Equals("")) title = "sloth";
 
