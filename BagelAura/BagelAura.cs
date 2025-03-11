@@ -255,6 +255,7 @@ namespace BagelAura
             focusTimer.Dispose();
 
             Application.ExitThread();
+            Environment.Exit(0);
         }
 
         private static void OnTimedFocusEvent(Object source, ElapsedEventArgs e)
