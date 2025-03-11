@@ -17,6 +17,22 @@ namespace BagelAura
         private string gifUrl = "";
         private string giphyKey = "";
 
+        
+        protected override void WndProc(ref Message m)
+        {
+            const uint WM_DISPLAYCHANGE = 0x007e;
+            // Listen for operating system messages. 
+            switch (m.Msg)
+            {
+                case (int) WM_DISPLAYCHANGE:
+                    break;
+                default:
+                    base.WndProc(ref m);
+                    break;
+            }
+        }
+        
+
         public void SetGiphyKey(string key)
         {
             this.giphyKey = key;
@@ -58,7 +74,7 @@ namespace BagelAura
         }
 
         public void InitializeLocation()
-        {
+            {
             InitializeComponent();
 
             this.Bounds = new Rectangle(10, 0, 662, 500);
@@ -163,6 +179,7 @@ namespace BagelAura
         private void FocusDisplay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             Graphics gfx = e.Graphics;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
         }
     }
 }

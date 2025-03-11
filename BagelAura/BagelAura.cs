@@ -12,7 +12,6 @@ using System.Timers;
 using static Vanara.PInvoke.Kernel32;
 using System.Runtime.InteropServices;
 using System.Text;
-using Vanara.PInvoke;
 
 namespace BagelAura
 {
@@ -205,6 +204,8 @@ namespace BagelAura
                 sdk.ReleaseControl(0);
             } else if (mode == PowerModes.Resume)
             {
+                Sleep(15000);
+                Application.Restart();
                 k = 1;
                 active = true;
                 SetTimers();
@@ -252,6 +253,8 @@ namespace BagelAura
 
             focusTimer.Stop();
             focusTimer.Dispose();
+
+            Application.ExitThread();
         }
 
         private static void OnTimedFocusEvent(Object source, ElapsedEventArgs e)

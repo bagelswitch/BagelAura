@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 using AltUI.Forms;
-using Vanara.PInvoke;
 
 namespace BagelAura
 {
@@ -51,6 +45,20 @@ namespace BagelAura
             Idle
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            const uint WM_DISPLAYCHANGE = 0x007e;
+            // Listen for operating system messages. 
+            switch (m.Msg)
+            {
+                case (int)WM_DISPLAYCHANGE:
+                    break;
+                default:
+                    base.WndProc(ref m);
+                    break;
+            }
+        }
+
         private Color DriveStatusColor(DriveStatus status)
         {
             switch (status)
@@ -75,7 +83,7 @@ namespace BagelAura
                 default:
                     return Color.DarkGray;
             }
-        }
+            }
 
         public void InitializeLocation()
         {
@@ -85,12 +93,12 @@ namespace BagelAura
             Point TopLeft = new Point(0, 0);
             if (System.Windows.Forms.Screen.AllScreens[0].Primary)
             {
-                //Console.WriteLine("CPUDisplay: Using screen 1");
+            //Console.WriteLine("CPUDisplay: Using screen 1");
                 TopLeft = System.Windows.Forms.Screen.AllScreens[1].WorkingArea.Location;
             }
             else
             {
-                //Console.WriteLine("CPUDisplay: Using screen 0");
+            //Console.WriteLine("CPUDisplay: Using screen 0");
                 TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
             }
             TopLeft.X = TopLeft.X + 350;
