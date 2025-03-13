@@ -204,11 +204,13 @@ namespace BagelAura
                 sdk.ReleaseControl(0);
             } else if (mode == PowerModes.Resume)
             {
+                Console.WriteLine("Resumed from sleep, delaying before restart");
                 Sleep(15000);
+                Console.WriteLine("Restarting application");
                 Application.Restart();
-                k = 1;
-                active = true;
-                SetTimers();
+                Console.WriteLine("Application restart complete");
+
+                Shutdown();
             }
         }
 
@@ -231,9 +233,61 @@ namespace BagelAura
             focusTimer.Enabled = true;
         }
 
+        static void Shutdown()
+        {
+            Console.WriteLine("Starting Shutdown");
+
+            try
+            {
+                Console.WriteLine("Disposing of timers");
+
+                cpuTimer.Stop();
+                cpuTimer.Dispose();
+
+                diskTimer.Stop();
+                diskTimer.Dispose();
+
+                focusTimer.Stop();
+                focusTimer.Dispose();
+
+                Console.WriteLine("Disposing of forms");
+
+                cpud.Close();
+                cpud.Dispose();
+
+                focusd.Shutdown();
+
+                focusd.Close();
+                focusd.Dispose();
+            } 
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            finally
+            {
+                Console.WriteLine("Exiting");
+
+                try
+                {
+                    Console.WriteLine("Application.Exit()");
+                    Application.Exit();
+                
+                    Console.WriteLine("Process kill");
+                    Process.GetCurrentProcess().Kill();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+            }
+        }
+
         [STAThread]
         static void Main(string[] args)
         {
+            Console.WriteLine("Starting");
+
             giphyKey = args[0];
             focusd.SetGiphyKey(giphyKey);
 
@@ -241,21 +295,15 @@ namespace BagelAura
             process.Exited += new EventHandler(OnExit);
             SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(OnPowerModeChanged);
 
+            Console.WriteLine("Setting timers");
             SetTimers();
 
+            Console.WriteLine("Running application");
             Application.Run();
 
-            cpuTimer.Stop();
-            cpuTimer.Dispose();
+            Shutdown();
 
-            diskTimer.Stop();
-            diskTimer.Dispose();
-
-            focusTimer.Stop();
-            focusTimer.Dispose();
-
-            Application.ExitThread();
-            Environment.Exit(0);
+            return;
         }
 
         private static void OnTimedFocusEvent(Object source, ElapsedEventArgs e)

@@ -32,6 +32,10 @@ namespace BagelAura
             }
         }
         
+        public void Shutdown()
+        {
+            this.giphybox.Dispose();
+        }
 
         public void SetGiphyKey(string key)
         {
