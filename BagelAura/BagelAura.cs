@@ -309,9 +309,9 @@ namespace BagelAura
         private static void OnTimedFocusEvent(Object source, ElapsedEventArgs e)
         {
             String title = GetActiveWindowTitle();
-            if (title == null || title.Trim().Equals("")) title = "sloth";
+            if (title == null || title.Trim().Equals("") || title.Trim().Equals("Program")) title = "sloth";
 
-            var words = title.Split(new char[] { ' ', ',', '.', '/', '|', ':', ';', '-', '\\', '+', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+            var words = title.Split(new char[] { ' ', ',', '.', '/', '|', ':', ';', '-', '\\', '+', '(', ')', '@' }, StringSplitOptions.RemoveEmptyEntries);
             var query = words.OrderByDescending(n => n.Length).First();
 
             focusd.SetQuery(query);
