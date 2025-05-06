@@ -19,6 +19,8 @@ namespace BagelAura
     {
         static Boolean active = true;
 
+        static int activescreen = 2;
+
         static String[] others = { "HYTE.Nexus.Service", "HYTE Nexus", "wallpaper32", "AsusCertService", "asus_framework", 
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2" };
 
@@ -36,6 +38,7 @@ namespace BagelAura
         private static System.Timers.Timer cpuTimer;
         private static System.Timers.Timer diskTimer;
         private static System.Timers.Timer focusTimer;
+        private static System.Windows.Forms.Timer restartTimer;
 
 
         static PerformanceCounter cpu = new PerformanceCounter
@@ -205,12 +208,7 @@ namespace BagelAura
             } else if (mode == PowerModes.Resume)
             {
                 Console.WriteLine("Resumed from sleep, delaying before restart");
-                Sleep(15000);
-                Console.WriteLine("Restarting application");
-                Application.Restart();
-                Console.WriteLine("Application restart complete");
-
-                Shutdown();
+                SetRestartTimer();
             }
         }
 
@@ -233,6 +231,22 @@ namespace BagelAura
             focusTimer.Enabled = true;
         }
 
+        private static void SetRestartTimer()
+        {
+            if(restartTimer is not null)
+            {
+                restartTimer.Stop();
+                restartTimer.Dispose();
+            }
+            restartTimer = new System.Windows.Forms.Timer();
+
+            restartTimer.Tick += new EventHandler(OnTimedRestartEvent);
+            restartTimer.Interval = 60000;
+            restartTimer.Enabled = true;
+            restartTimer.Start();
+            
+        }
+
         static void Shutdown()
         {
             Console.WriteLine("Starting Shutdown");
@@ -249,6 +263,12 @@ namespace BagelAura
 
                 focusTimer.Stop();
                 focusTimer.Dispose();
+
+                if (restartTimer is not null)
+                {
+                    restartTimer.Stop();
+                    restartTimer.Dispose();
+                }
 
                 Console.WriteLine("Disposing of forms");
 
@@ -295,6 +315,15 @@ namespace BagelAura
             process.Exited += new EventHandler(OnExit);
             SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(OnPowerModeChanged);
 
+            if (System.Windows.Forms.Screen.AllScreens[0].Primary)
+            {
+                activescreen = 1;
+            }
+            else
+            {
+                activescreen = 0;
+            }
+
             Console.WriteLine("Setting timers");
             SetTimers();
 
@@ -317,6 +346,32 @@ namespace BagelAura
             if (query.Equals("Program")) query = "sloth";
 
             focusd.SetQuery(query);
+
+            int screen = 0;
+            if (System.Windows.Forms.Screen.AllScreens[0].Primary)
+            {
+                screen = 1;
+            }
+            else
+            {
+                screen = 0;
+            }
+            if (screen != activescreen)
+            {
+                Console.WriteLine("\nActive screen changed from " + activescreen + " to " + screen + ", delaying before restart");
+                activescreen = screen;
+                SetRestartTimer();
+            }
+        }
+
+        private static void OnTimedRestartEvent(Object source, EventArgs e)
+        {
+            restartTimer.Stop();
+
+            Console.WriteLine("Restarting application");
+            Application.Restart();
+            Console.WriteLine("Application restart complete");
+            Shutdown();
         }
 
         [DllImport("user32.dll")]
