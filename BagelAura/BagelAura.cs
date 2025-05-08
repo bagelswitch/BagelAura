@@ -19,10 +19,8 @@ namespace BagelAura
     {
         static Boolean active = true;
 
-        static int activescreen = 2;
-
         static String[] others = { "HYTE.Nexus.Service", "HYTE Nexus", "wallpaper32", "AsusCertService", "asus_framework", 
-                                   "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2" };
+                                   "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2" }; 
 
         // Create SDK instance
         static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
@@ -175,6 +173,7 @@ namespace BagelAura
             process.PriorityClass = ProcessPriorityClass.Idle;
             SetProcessInformation<PROCESS_POWER_THROTTLING_STATE>(process, PROCESS_INFORMATION_CLASS.ProcessPowerThrottling, PowerThrottling);
 
+            /*
             foreach (var other in others)
             {
                 Process[] otherProcs = Process.GetProcessesByName(other);
@@ -184,6 +183,7 @@ namespace BagelAura
                     SetProcessInformation<PROCESS_POWER_THROTTLING_STATE>(otherProcess, PROCESS_INFORMATION_CLASS.ProcessPowerThrottling, PowerThrottling);
                 }
             }
+            */
         }
 
         // cleanup on exit
@@ -210,6 +210,12 @@ namespace BagelAura
                 Console.WriteLine("Resumed from sleep, delaying before restart");
                 SetRestartTimer();
             }
+        }
+
+        static void OnDisplaySettingsChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("Display settings changed, delaying before restart");
+            SetRestartTimer();
         }
 
         private static void SetTimers()
@@ -314,15 +320,7 @@ namespace BagelAura
             Process process = Process.GetCurrentProcess();
             process.Exited += new EventHandler(OnExit);
             SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(OnPowerModeChanged);
-
-            if (System.Windows.Forms.Screen.AllScreens[0].Primary)
-            {
-                activescreen = 1;
-            }
-            else
-            {
-                activescreen = 0;
-            }
+            SystemEvents.DisplaySettingsChanged += new EventHandler(OnDisplaySettingsChanged);
 
             Console.WriteLine("Setting timers");
             SetTimers();
@@ -346,22 +344,6 @@ namespace BagelAura
             if (query.Equals("Program")) query = "sloth";
 
             focusd.SetQuery(query);
-
-            int screen = 0;
-            if (System.Windows.Forms.Screen.AllScreens[0].Primary)
-            {
-                screen = 1;
-            }
-            else
-            {
-                screen = 0;
-            }
-            if (screen != activescreen)
-            {
-                Console.WriteLine("\nActive screen changed from " + activescreen + " to " + screen + ", delaying before restart");
-                activescreen = screen;
-                SetRestartTimer();
-            }
         }
 
         private static void OnTimedRestartEvent(Object source, EventArgs e)
