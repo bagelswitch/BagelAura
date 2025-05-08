@@ -12,6 +12,7 @@ using System.Timers;
 using static Vanara.PInvoke.Kernel32;
 using System.Runtime.InteropServices;
 using System.Text;
+using static Vanara.PInvoke.User32;
 
 namespace BagelAura
 {
@@ -25,7 +26,7 @@ namespace BagelAura
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2" }; 
 
         // Create SDK instance
-        static IAuraSdk3 sdk = dolights?new AuraSdk() as IAuraSdk3:null;
+        static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
 
         static IAuraSyncDevice stickOne = null;
         static IAuraSyncDevice stickTwo = null;
@@ -319,10 +320,35 @@ namespace BagelAura
             }
         }
 
+        static void MakeItPurple()
+        {
+            double intensity = 0.75;
+            byte red = (byte)(255 * intensity);
+            byte green = (byte)(0 * intensity);
+            byte blue = (byte)(255 * intensity);
+
+            uint color = ColorFromBytes(blue, green, red);
+
+            ObtainControl();
+
+            for (int i = 0; i < 8; i++)
+            {
+                stickOneLights[i].Color = color;
+                stickTwoLights[i].Color = color;
+            }
+            stickOne.Apply();
+            stickTwo.Apply();
+
+            sdk.ReleaseControl(0);
+        }
+
         [STAThread]
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
+
+            // make RAM sticks a nice purple color
+            //MakeItPurple();
 
             giphyKey = args[0];
             focusd.SetGiphyKey(giphyKey);
