@@ -19,11 +19,13 @@ namespace BagelAura
     {
         static Boolean active = true;
 
+        static Boolean dolights = false;
+
         static String[] others = { "HYTE.Nexus.Service", "HYTE Nexus", "wallpaper32", "AsusCertService", "asus_framework", 
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2" }; 
 
         // Create SDK instance
-        static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
+        static IAuraSdk3 sdk = dolights?new AuraSdk() as IAuraSdk3:null;
 
         static IAuraSyncDevice stickOne = null;
         static IAuraSyncDevice stickTwo = null;
@@ -125,10 +127,6 @@ namespace BagelAura
                     }
                 }
 
-                // force all background processes to Eco QoS
-                Process process = Process.GetCurrentProcess();
-                EnableEcoqos(process);
-
                 k = 2;
                 controlLock = false;
             }
@@ -173,7 +171,6 @@ namespace BagelAura
             process.PriorityClass = ProcessPriorityClass.Idle;
             SetProcessInformation<PROCESS_POWER_THROTTLING_STATE>(process, PROCESS_INFORMATION_CLASS.ProcessPowerThrottling, PowerThrottling);
 
-            /*
             foreach (var other in others)
             {
                 Process[] otherProcs = Process.GetProcessesByName(other);
@@ -183,14 +180,16 @@ namespace BagelAura
                     SetProcessInformation<PROCESS_POWER_THROTTLING_STATE>(otherProcess, PROCESS_INFORMATION_CLASS.ProcessPowerThrottling, PowerThrottling);
                 }
             }
-            */
         }
 
         // cleanup on exit
         private static void OnExit(object sender, System.EventArgs e)
         {
             active = false;
-            sdk.ReleaseControl(0);
+            if (dolights)
+            {
+                sdk.ReleaseControl(0);
+            }
             Application.Exit();
         }
 
@@ -204,7 +203,10 @@ namespace BagelAura
                 cpuTimer.Stop();
                 diskTimer.Stop();
                 focusTimer.Stop();
-                sdk.ReleaseControl(0);
+                if (dolights)
+                {
+                    sdk.ReleaseControl(0);
+                }
             } else if (mode == PowerModes.Resume)
             {
                 Console.WriteLine("Resumed from sleep, delaying before restart");
@@ -214,6 +216,14 @@ namespace BagelAura
 
         static void OnDisplaySettingsChanged(object sender, EventArgs e)
         {
+            active = false;
+            cpuTimer.Stop();
+            diskTimer.Stop();
+            focusTimer.Stop();
+            if (dolights)
+            {
+                sdk.ReleaseControl(0);
+            }
             Console.WriteLine("Display settings changed, delaying before restart");
             SetRestartTimer();
         }
@@ -325,6 +335,10 @@ namespace BagelAura
             Console.WriteLine("Setting timers");
             SetTimers();
 
+            // force all background processes to Eco QoS
+            Console.WriteLine("Setting Eco QoS");
+            EnableEcoqos(process);
+
             Console.WriteLine("Running application");
             Application.Run();
 
@@ -379,13 +393,16 @@ namespace BagelAura
         {
             if (active)
             {
-                if (k == 1)
+                if (dolights)
                 {
-                    ObtainControl();
-                }
-                else if (k >= 5000)
-                {
-                    ObtainControl(false);
+                    if (k == 1)
+                    {
+                        ObtainControl();
+                    }
+                    else if (k >= 5000)
+                    {
+                        ObtainControl(false);
+                    }
                 }
 
                 if (!controlLock)
@@ -455,19 +472,24 @@ namespace BagelAura
                     blue = (int)(255 * intensity);
 
                     uint color = ColorFromBytes((byte)blueCalculator.Update(blue), (byte)greenCalculator.Update((int)((float)green * 0.8)), (byte)redCalculator.Update(red));
-                    //mBoardLights[0].Color = color;
-                    //mBoardLights[1].Color = color;
-                    //mBoardLights[2].Color = color;
-                    //mBoard.Apply();
-
-                    // Traverse all LEDs on DRAM sticks one and two
-                    for (int i = 0; i < 8; i++)
+                    
+                    if (dolights)
                     {
-                        stickOneLights[i].Color = color;
-                        stickTwoLights[i].Color = color;
+                        // Set motherboard aura section lights
+                        //mBoardLights[0].Color = color;
+                        //mBoardLights[1].Color = color;
+                        //mBoardLights[2].Color = color;
+                        //mBoard.Apply();
+
+                        // Traverse all LEDs on DRAM sticks one and two
+                        for (int i = 0; i < 8; i++)
+                        {
+                            stickOneLights[i].Color = color;
+                            stickTwoLights[i].Color = color;
+                        }
+                        stickOne.Apply();
+                        stickTwo.Apply();
                     }
-                    stickOne.Apply();
-                    stickTwo.Apply();
 
                     cpud.currentload = graphCpuLoad / 100;
                     cpud.currentColor = activecolor;
