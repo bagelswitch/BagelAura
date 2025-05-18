@@ -26,7 +26,7 @@ namespace BagelAura
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2" }; 
 
         // Create SDK instance
-        static IAuraSdk3 sdk = new AuraSdk() as IAuraSdk3;
+        static IAuraSdk3 sdk = dolights?new AuraSdk() as IAuraSdk3:null;
 
         static IAuraSyncDevice stickOne = null;
         static IAuraSyncDevice stickTwo = null;
@@ -231,7 +231,7 @@ namespace BagelAura
 
         private static void SetTimers()
         {
-            cpuTimer = new System.Timers.Timer(90);
+            cpuTimer = new System.Timers.Timer(110);
             diskTimer = new System.Timers.Timer(240);
             focusTimer = new System.Timers.Timer(4500);
 

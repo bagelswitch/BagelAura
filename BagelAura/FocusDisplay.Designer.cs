@@ -85,6 +85,7 @@ namespace BagelAura
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TransparencyKey = System.Drawing.Color.White;
+            this.AllowTransparency = false;
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FocusDisplay_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.giphybox)).EndInit();
             this.ResumeLayout(false);
