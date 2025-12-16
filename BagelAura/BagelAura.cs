@@ -23,7 +23,7 @@ namespace BagelAura
         static Boolean dolights = false;
 
         static String[] others = { "HYTE Nexus", "HYTE.Nexus.Service", "wallpaper32", "AsusCertService", "asus_framework", 
-                                   "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2" }; 
+                                   "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2", "OpenRGB" }; 
 
         // Create SDK instance
         static IAuraSdk3 sdk = dolights?new AuraSdk() as IAuraSdk3:null;
