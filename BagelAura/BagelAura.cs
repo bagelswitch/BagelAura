@@ -22,7 +22,7 @@ namespace BagelAura
         static String[] others = { "HYTE Nexus", "HYTE.Nexus.Service", "wallpaper32", "AsusCertService", "asus_framework", 
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2", "OpenRGB" };
 
-        static String[] hyteprocs = { "HYTE Nexus", "HYTE.Nexus.Service", "OpenRGB" };
+        static String[] hyteprocs = { "HYTE Nexus", "HYTE.Nexus.Service" }; //, "OpenRGB" };
 
         private static System.Timers.Timer cpuTimer;
         private static System.Timers.Timer diskTimer;
@@ -349,6 +349,9 @@ namespace BagelAura
                     otherProcess.Kill();
                 }
             }
+
+            Sleep(2500);
+
             using (Process hyte = new Process())
             {
                 hyte.StartInfo.FileName = "C:\\Program Files\\HYTE Nexus\\HYTE Nexus.exe";
