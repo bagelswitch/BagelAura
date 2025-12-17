@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using AuraServiceLib;
 using Microsoft.Win32;
 
 using System.Drawing;
@@ -20,21 +19,10 @@ namespace BagelAura
     {
         static Boolean active = true;
 
-        static Boolean dolights = false;
-
         static String[] others = { "HYTE Nexus", "HYTE.Nexus.Service", "wallpaper32", "AsusCertService", "asus_framework", 
-                                   "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2", "OpenRGB" }; 
+                                   "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2", "OpenRGB" };
 
-        // Create SDK instance
-        static IAuraSdk3 sdk = dolights?new AuraSdk() as IAuraSdk3:null;
-
-        static IAuraSyncDevice stickOne = null;
-        static IAuraSyncDevice stickTwo = null;
-        static IAuraSyncDevice mBoard = null;
-
-        static List<IAuraRgbLight> stickOneLights = null;
-        static List<IAuraRgbLight> stickTwoLights = null;
-        static List<IAuraRgbLight> mBoardLights = null;
+        static String[] hyteprocs = { "HYTE Nexus", "HYTE.Nexus.Service", "OpenRGB" };
 
         private static System.Timers.Timer cpuTimer;
         private static System.Timers.Timer diskTimer;
@@ -95,38 +83,6 @@ namespace BagelAura
             if (!controlLock)
             {
                 controlLock = true;
-                // Aquire control
-                sdk.ReleaseControl(0);
-                sdk.SwitchMode();
-
-                if (reEnum)
-                {
-                    // enumerate all devices
-                    IAuraSyncDeviceCollection devices = sdk.Enumerate(0);
-
-                    // Traverse all devices
-                    foreach (IAuraSyncDevice dev in devices)
-                    {
-                        if (dev.Name.Equals("ENE_RGB_For_ASUS0"))
-                        {
-                            stickOne = dev;
-                            stickOneLights = stickOne.Lights.Cast<IAuraRgbLight>().ToList();
-                            stickOneLights.Reverse();
-                        }
-                        else if (dev.Name.Equals("ENE_RGB_For_ASUS1"))
-                        {
-                            stickTwo = dev;
-                            stickTwoLights = stickTwo.Lights.Cast<IAuraRgbLight>().ToList();
-                            stickTwoLights.Reverse();
-                        }
-                        else if (dev.Name.Equals("Mainboard_Master"))
-                        {
-                            mBoard = dev;
-                            mBoardLights = mBoard.Lights.Cast<IAuraRgbLight>().ToList();
-                            mBoardLights.Reverse();
-                        }
-                    }
-                }
 
                 k = 2;
                 controlLock = false;
@@ -187,10 +143,6 @@ namespace BagelAura
         private static void OnExit(object sender, System.EventArgs e)
         {
             active = false;
-            if (dolights)
-            {
-                sdk.ReleaseControl(0);
-            }
             Application.Exit();
         }
 
@@ -204,10 +156,6 @@ namespace BagelAura
                 cpuTimer.Stop();
                 diskTimer.Stop();
                 focusTimer.Stop();
-                if (dolights)
-                {
-                    sdk.ReleaseControl(0);
-                }
             } else if (mode == PowerModes.Resume)
             {
                 Console.WriteLine("Resumed from sleep, delaying before restart");
@@ -221,10 +169,6 @@ namespace BagelAura
             cpuTimer.Stop();
             diskTimer.Stop();
             focusTimer.Stop();
-            if (dolights)
-            {
-                sdk.ReleaseControl(0);
-            }
             Console.WriteLine("Display settings changed, delaying before restart");
             SetRestartTimer();
         }
@@ -258,7 +202,7 @@ namespace BagelAura
             restartTimer = new System.Windows.Forms.Timer();
 
             restartTimer.Tick += new EventHandler(OnTimedRestartEvent);
-            restartTimer.Interval = 60000;
+            restartTimer.Interval = 15000;
             restartTimer.Enabled = true;
             restartTimer.Start();
             
@@ -328,18 +272,6 @@ namespace BagelAura
             byte blue = (byte)(255 * intensity);
 
             uint color = ColorFromBytes(blue, green, red);
-
-            ObtainControl();
-
-            for (int i = 0; i < 8; i++)
-            {
-                stickOneLights[i].Color = color;
-                stickTwoLights[i].Color = color;
-            }
-            stickOne.Apply();
-            stickTwo.Apply();
-
-            sdk.ReleaseControl(0);
         }
 
         [STAThread]
@@ -390,6 +322,25 @@ namespace BagelAura
         {
             restartTimer.Stop();
 
+            Console.WriteLine("Restarting HYTE processes");
+            foreach (var other in hyteprocs)
+            {
+                Process[] otherProcs = Process.GetProcessesByName(other);
+                foreach (var otherProcess in otherProcs)
+                {
+                    otherProcess.Kill();
+                }
+            }
+            using (Process hyte = new Process())
+            {
+                hyte.StartInfo.FileName = "C:\\Program Files\\HYTE Nexus\\HYTE Nexus.exe";
+                hyte.StartInfo.WorkingDirectory = "C:\\Program Files\\HYTE Nexus\\";
+                hyte.StartInfo.Arguments = "--startup";
+                hyte.Start();
+            }
+
+            Sleep(25000);
+
             Console.WriteLine("Restarting application");
             Application.Restart();
             Console.WriteLine("Application restart complete");
@@ -419,18 +370,6 @@ namespace BagelAura
         {
             if (active)
             {
-                if (dolights)
-                {
-                    if (k == 1)
-                    {
-                        ObtainControl();
-                    }
-                    else if (k >= 5000)
-                    {
-                        ObtainControl(false);
-                    }
-                }
-
                 if (!controlLock)
                 {
                     int instCpuLoad = (int)(cpu.NextValue() * 100);
@@ -498,24 +437,6 @@ namespace BagelAura
                     blue = (int)(255 * intensity);
 
                     uint color = ColorFromBytes((byte)blueCalculator.Update(blue), (byte)greenCalculator.Update((int)((float)green * 0.8)), (byte)redCalculator.Update(red));
-                    
-                    if (dolights)
-                    {
-                        // Set motherboard aura section lights
-                        //mBoardLights[0].Color = color;
-                        //mBoardLights[1].Color = color;
-                        //mBoardLights[2].Color = color;
-                        //mBoard.Apply();
-
-                        // Traverse all LEDs on DRAM sticks one and two
-                        for (int i = 0; i < 8; i++)
-                        {
-                            stickOneLights[i].Color = color;
-                            stickTwoLights[i].Color = color;
-                        }
-                        stickOne.Apply();
-                        stickTwo.Apply();
-                    }
 
                     cpud.currentload = graphCpuLoad / 100;
                     cpud.currentColor = activecolor;
