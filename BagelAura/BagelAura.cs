@@ -139,6 +139,22 @@ namespace BagelAura
             }
         }
 
+        // Set Eco QoS on edge webview process
+        static void WebviewEcoqos()
+        {
+            PROCESS_POWER_THROTTLING_STATE PowerThrottling = new PROCESS_POWER_THROTTLING_STATE();
+            PowerThrottling.Version = PROCESS_POWER_THROTTLING_STATE.PROCESS_POWER_THROTTLING_CURRENT_VERSION;
+            PowerThrottling.ControlMask = PROCESS_POWER_THROTTLING_MASK.PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
+            PowerThrottling.StateMask = PROCESS_POWER_THROTTLING_MASK.PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
+
+            Process[] otherProcs = Process.GetProcessesByName("msedgewebview2");
+            foreach (var otherProcess in otherProcs)
+            {
+                otherProcess.PriorityClass = ProcessPriorityClass.Idle;
+                SetProcessInformation<PROCESS_POWER_THROTTLING_STATE>(otherProcess, PROCESS_INFORMATION_CLASS.ProcessPowerThrottling, PowerThrottling);
+            }
+        }
+
         // cleanup on exit
         private static void OnExit(object sender, System.EventArgs e)
         {
@@ -316,6 +332,8 @@ namespace BagelAura
             if (query.Equals("Program")) query = "sloth";
 
             focusd.SetQuery(query);
+
+            WebviewEcoqos();
         }
 
         private static void OnTimedRestartEvent(Object source, EventArgs e)
