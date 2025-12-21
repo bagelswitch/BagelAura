@@ -18,6 +18,7 @@ namespace BagelAura
     internal class BagelAura
     {
         static Boolean active = true;
+        static Boolean restartBySleep = false;
 
         static String[] others = { "HYTE Nexus", "HYTE.Nexus.Service", "wallpaper32", "AsusCertService", "asus_framework", 
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2", "OpenRGB" };
@@ -169,6 +170,7 @@ namespace BagelAura
             if(mode == PowerModes.Suspend)
             {
                 active = false;
+                restartBySleep = true;
                 cpuTimer.Stop();
                 diskTimer.Stop();
                 focusTimer.Stop();
@@ -340,24 +342,27 @@ namespace BagelAura
         {
             restartTimer.Stop();
 
-            Console.WriteLine("Restarting HYTE processes");
-            foreach (var other in hyteprocs)
+            if (restartBySleep)
             {
-                Process[] otherProcs = Process.GetProcessesByName(other);
-                foreach (var otherProcess in otherProcs)
+                Console.WriteLine("Restarting HYTE processes");
+                foreach (var other in hyteprocs)
                 {
-                    otherProcess.Kill();
+                    Process[] otherProcs = Process.GetProcessesByName(other);
+                    foreach (var otherProcess in otherProcs)
+                    {
+                        otherProcess.Kill();
+                    }
                 }
-            }
 
-            Sleep(2500);
+                Sleep(2500);
 
-            using (Process hyte = new Process())
-            {
-                hyte.StartInfo.FileName = "C:\\Program Files\\HYTE Nexus\\HYTE Nexus.exe";
-                hyte.StartInfo.WorkingDirectory = "C:\\Program Files\\HYTE Nexus\\";
-                hyte.StartInfo.Arguments = "--startup";
-                hyte.Start();
+                using (Process hyte = new Process())
+                {
+                    hyte.StartInfo.FileName = "C:\\Program Files\\HYTE Nexus\\HYTE Nexus.exe";
+                    hyte.StartInfo.WorkingDirectory = "C:\\Program Files\\HYTE Nexus\\";
+                    hyte.StartInfo.Arguments = "--startup";
+                    hyte.Start();
+                }
             }
 
             Sleep(25000);
