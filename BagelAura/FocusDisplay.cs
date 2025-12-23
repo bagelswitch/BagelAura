@@ -91,7 +91,7 @@ namespace BagelAura
             {
                 TopLeft = System.Windows.Forms.Screen.AllScreens[0].WorkingArea.Location;
             }
-            TopLeft.X = TopLeft.X + 350;
+            TopLeft.X = TopLeft.X + 10;
             TopLeft.Y = TopLeft.Y + 1890;
             this.Location = TopLeft;
             this.Top = TopLeft.Y;
@@ -104,6 +104,8 @@ namespace BagelAura
                 System.Windows.Forms.ControlStyles.UserPaint |
                 System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                 System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer, true);
+
+            this.Scale(new SizeF((float)0.999, (float)0.999));
         }
 
         public FocusDisplay()
@@ -183,7 +185,6 @@ namespace BagelAura
         private void FocusDisplay_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             Graphics gfx = e.Graphics;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
         }
     }
 }

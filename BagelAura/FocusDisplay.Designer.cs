@@ -69,7 +69,6 @@ namespace BagelAura
             // 
             // FocusDisplay
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(68)))), ((int)(((byte)(80)))));
             this.ClientSize = new System.Drawing.Size(662, 500);
             this.ControlBox = false;
