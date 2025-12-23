@@ -19,6 +19,9 @@
     <Reference Include="AltUI">
       <HintPath>..\..\AltUI\AltUI\bin\x64\Release\net9.0-windows\AltUI.dll</HintPath>
     </Reference>
+	<Reference Include="OpenRGB.NET">
+		<HintPath>..\..\OpenRGB.NET\src\OpenRGB.NET\bin\Release\net8.0\OpenRGB.NET.dll</HintPath>
+	</Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />

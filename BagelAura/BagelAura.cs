@@ -13,6 +13,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using static Vanara.PInvoke.User32;
 
+using OpenRGB.NET;
+using OpenRGB.NET.Utils;
+
 namespace BagelAura
 {
     internal class BagelAura
@@ -367,6 +370,10 @@ namespace BagelAura
 
             Sleep(25000);
 
+            using var client = new OpenRgbClient();
+            client.Connect();
+            client.RequestResetDevices();
+
             Console.WriteLine("Restarting application");
             Application.Restart();
             Console.WriteLine("Application restart complete");
@@ -453,7 +460,7 @@ namespace BagelAura
                         blue = (int)(255 * intensity);
                     }
 
-                    Color activecolor = Color.FromArgb((int)redGraphCalculator.Update(red), (int)greenGraphCalculator.Update(green), (int)blueGraphCalculator.Update(blue));
+                    System.Drawing.Color activecolor = System.Drawing.Color.FromArgb((int)redGraphCalculator.Update(red), (int)greenGraphCalculator.Update(green), (int)blueGraphCalculator.Update(blue));
 
                     intensity = (float)(instCpuLoad) / (float)8000;
                     if (intensity > 1.0) intensity = (float)1.0;
