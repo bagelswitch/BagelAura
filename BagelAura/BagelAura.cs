@@ -285,23 +285,10 @@ namespace BagelAura
             }
         }
 
-        static void MakeItPurple()
-        {
-            double intensity = 0.75;
-            byte red = (byte)(255 * intensity);
-            byte green = (byte)(0 * intensity);
-            byte blue = (byte)(255 * intensity);
-
-            uint color = ColorFromBytes(blue, green, red);
-        }
-
         [STAThread]
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
-
-            // make RAM sticks a nice purple color
-            //MakeItPurple();
 
             giphyKey = args[0];
             focusd.SetGiphyKey(giphyKey);
