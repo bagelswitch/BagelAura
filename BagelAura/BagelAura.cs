@@ -26,7 +26,7 @@ namespace BagelAura
         static String[] others = { "HYTE Nexus", "HYTE.Nexus.Service", "wallpaper32", "AsusCertService", "asus_framework", 
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2", "OpenRGB" };
 
-        static String[] hyteprocs = { "HYTE Nexus", "HYTE.Nexus.Service" }; //, "OpenRGB" };
+        static String[] hyteprocs = { "HYTE Nexus", "HYTE.Nexus.Service", "OpenRGB" };
 
         private static System.Timers.Timer cpuTimer;
         private static System.Timers.Timer diskTimer;
@@ -340,7 +340,11 @@ namespace BagelAura
                     Process[] otherProcs = Process.GetProcessesByName(other);
                     foreach (var otherProcess in otherProcs)
                     {
-                        otherProcess.Kill();
+                        otherProcess.CloseMainWindow();
+                        if (!otherProcess.WaitForExit(2500))
+                        {
+                            otherProcess.Kill();
+                        }
                     }
                 }
 
@@ -357,9 +361,11 @@ namespace BagelAura
 
             Sleep(25000);
 
+            /*
             using var client = new OpenRgbClient();
             client.Connect();
             client.RequestResetDevices();
+            */
 
             Console.WriteLine("Restarting application");
             Application.Restart();
