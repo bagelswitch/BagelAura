@@ -124,7 +124,7 @@ namespace BagelAura
 
             restClient = new(handler)
             {
-                BaseAddress = new Uri("https://tenor.googleapis.com/v2/search"),
+                BaseAddress = new Uri("https://api.klipy.com/v2/search"),
                 Timeout = TimeSpan.FromSeconds(10),
             };
 
