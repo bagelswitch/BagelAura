@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.ServiceProcess;
 using System.Linq;
 using Microsoft.Win32;
 
@@ -313,10 +314,48 @@ namespace BagelAura
             return;
         }
 
+        // Check if a service exists before trying to check its status
+        public static bool ServiceExists(string serviceName)
+        {
+            return ServiceController.GetServices().Any(serviceController => serviceController.ServiceName.Equals(serviceName));
+        }
+
+        public static bool IsServiceRunning(string serviceName)
+        {
+            if (!ServiceExists(serviceName))
+            {
+                Console.WriteLine($"Service '{serviceName}' is not installed.");
+                return false;
+            }
+
+            ServiceController sc = new ServiceController(serviceName);
+
+            // Refresh to get the current status, especially if checked repeatedly
+            sc.Refresh();
+
+            if (sc.Status == ServiceControllerStatus.Running)
+            {
+                return true;
+            }
+            else
+            {
+                // You can check for other states like Stopped, Paused, StartPending, StopPending, etc.
+                Console.WriteLine($"Service '{serviceName}' is in status: {sc.Status}");
+                return false;
+            }
+        }
+
         private static void OnTimedFocusEvent(Object source, ElapsedEventArgs e)
         {
             String title = GetActiveWindowTitle();
-            if (title == null || title.Trim().Equals("")) title = "sloth";
+            if (IsServiceRunning("WireGuardTunnel$PrivadoVPN")) {
+                title = "VPN";
+            } else {
+                if (title == null || title.Trim().Equals(""))
+                {
+                    title = "sloth";
+                }
+            }
 
             var words = title.Split(new char[] { ' ', ',', '.', '/', '|', ':', ';', '-', '\\', '+', '(', ')', '@' }, StringSplitOptions.RemoveEmptyEntries);
             var query = words.OrderByDescending(n => n.Length).First().Trim();
