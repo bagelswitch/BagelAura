@@ -36,6 +36,9 @@ namespace BagelAura
         private void InitializeComponent()
         {
             this.giphybox = new Microsoft.Web.WebView2.WinForms.WebView2();
+            CoreWebView2CreationProperties creationProps = new CoreWebView2CreationProperties();
+            creationProps.AdditionalBrowserArguments = "--force-low-power-gpu";
+            this.giphybox.CreationProperties = creationProps;
             this.queryTerm = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.giphybox)).BeginInit();
             this.SuspendLayout();

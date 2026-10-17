@@ -24,10 +24,10 @@ namespace BagelAura
         static Boolean active = true;
         static Boolean restartBySleep = false;
 
-        static String[] others = { "HYTE Nexus", "HYTE.Nexus.Service", "wallpaper32", "AsusCertService", "asus_framework", 
+        static String[] others = { "Nexus", "nexus-overlay", "HYTE Nexus", "HYTE.Nexus.Service", "wallpaper32", "wallpaper64", "AsusCertService", "asus_framework", 
                                    "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2", "OpenRGB" };
 
-        static String[] hyteprocs = { "HYTE Nexus", "HYTE.Nexus.Service", "OpenRGB" };
+        static String[] hyteprocs = { "Nexus", "nexus-overlay", "HYTE Nexus", "HYTE.Nexus.Service", "OpenRGB" };
 
         private static System.Timers.Timer cpuTimer;
         private static System.Timers.Timer diskTimer;
@@ -174,7 +174,7 @@ namespace BagelAura
             if(mode == PowerModes.Suspend)
             {
                 active = false;
-                restartBySleep = true;
+                //restartBySleep = true;
                 cpuTimer.Stop();
                 diskTimer.Stop();
                 focusTimer.Stop();
@@ -391,9 +391,9 @@ namespace BagelAura
 
                 using (Process hyte = new Process())
                 {
-                    hyte.StartInfo.FileName = "C:\\Program Files\\HYTE Nexus\\HYTE Nexus.exe";
-                    hyte.StartInfo.WorkingDirectory = "C:\\Program Files\\HYTE Nexus\\";
-                    hyte.StartInfo.Arguments = "--startup";
+                    hyte.StartInfo.FileName = "C:\\Program Files\\Nexus\\Nexus.exe";
+                    hyte.StartInfo.WorkingDirectory = "C:\\Program Files\\Nexus\\";
+                    //hyte.StartInfo.Arguments = "--service";
                     hyte.Start();
                 }
             }
