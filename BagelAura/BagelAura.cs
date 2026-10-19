@@ -25,7 +25,7 @@ namespace BagelAura
         static Boolean restartBySleep = false;
 
         static String[] others = { "Nexus", "nexus-overlay", "HYTE Nexus", "HYTE.Nexus.Service", "wallpaper32", "wallpaper64", "AsusCertService", "asus_framework", 
-                                   "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2", "OpenRGB" };
+                                   "steamwebhelper", "steam", "SearchIndexer", "OneDrive", "nordvpn-service", "msedgewebview2", "OpenRGB", "OpenRGB-headless", "adb" };
 
         static String[] hyteprocs = { "Nexus", "nexus-overlay", "HYTE Nexus", "HYTE.Nexus.Service", "OpenRGB" };
 
